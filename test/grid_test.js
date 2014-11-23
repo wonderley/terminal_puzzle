@@ -1,6 +1,8 @@
+/* Run with mocha */
+/* global require, describe, it */
 var assert = require('assert');
-var game_grid = require('../grid.js');
-var my_grid = new game_grid.Grid();
+var gridModule = require('../grid.js');
+var my_grid = new gridModule.Grid();
 
 describe('grid', function(){
   it('should have height and width', function(){
@@ -99,7 +101,7 @@ describe('grid', function(){
     for(var x = 0; x < my_grid.width; ++x){
       for(var y = 0; y < my_grid.height; ++y){
         var tile = my_grid.tileAt(x, y);
-        assert(tile.state === game_grid.TileState.EMPTY);
+        assert(tile.state === gridModule.TileState.EMPTY);
       }
     }
   });
@@ -113,18 +115,18 @@ describe('grid', function(){
 
 describe('grid', function(){
   it('has bottom row occupied after row is advanced', function(){
-    var grid = new game_grid.Grid();
+    var grid = new gridModule.Grid();
     grid.advanceRows();
     for(var x = 0; x < grid.width; ++x){
       var tile = grid.tileAt(x, grid.height - 1);
-      assert(tile.state !== game_grid.TileState.EMPTY);
+      assert(tile.state !== gridModule.TileState.EMPTY);
     }
   });
 });
 
 describe('grid', function(){
   it('shifts all rows up by one when rows are advanced', function(){
-    var grid = new game_grid.Grid();
+    var grid = new gridModule.Grid();
     var original_grid = [];
     for(var y = 0; y < grid.height; ++y){
       var row = [];
@@ -151,10 +153,74 @@ describe('grid', function(){
 describe('randomOccupiedTileState', function(){
   it('only returns valid occupied tile states', function(){
     for (var i = 0; i < 100; ++i){
-      var randomState = game_grid.randomOccupiedTileState();
-      assert(randomState > game_grid.TileState.EMPTY);
-      assert(randomState < game_grid.TileState.COUNT);
+      var randomState = gridModule.randomOccupiedTileState();
+      assert(randomState > gridModule.TileState.EMPTY);
+      assert(randomState < gridModule.TileState.COUNT);
     }
   });
 });
+
+describe('rowAt', function(){
+  it('should return the specified row', function(){
+    var grid = new gridModule.Grid();
+    grid.advanceRows();
+    // Get the values in the newly created row
+    var manuallyGeneratedRow = [];
+    for(var x = 0; x < grid.width; ++x){
+      manuallyGeneratedRow.push(grid.tileAt(x, grid.height - 1));
+    }
+    var returnedRow = grid.rowAt(grid.height - 1);
+    returnedRow.forEach(function(tile, idx){
+      assert(tile.state === manuallyGeneratedRow[idx].state);
+    });
+  });
+});
+
+describe('rowAt', function(){
+  it('should throw if row passed is greater than or equal to height', function(){
+    var grid = new gridModule.Grid();
+    var threw = false;
+    try {
+      grid.rowAt(grid.height);
+    } catch (e) {
+      threw = true;
+    }
+    assert(threw);
+  });
+});
+
+describe('rowAt', function(){
+  it('should throw if row passed is negative', function(){
+    var grid = new gridModule.Grid();
+    var threw = false;
+    try {
+      grid.rowAt(-1);
+    } catch (e) {
+      threw = true;
+    }
+    assert(threw);
+  });
+});
+
+describe('The module', function(){
+  it('exports the function isValidGrid', function(){
+    assert(gridModule.isValidGrid !== undefined);
+  });
+});
+
+describe('isValidGrid', function(){
+  it('fails if falsy value is passed', function(){
+    assert(gridModule.isValidGrid() === false);
+    assert(gridModule.isValidGrid(null) === false);
+    assert(gridModule.isValidGrid(false) === false);
+  });
+});
+
+describe('isValidGrid', function(){
+  it('succeeds if a grid is passed', function(){
+    var grid = new gridModule.Grid();
+    assert(gridModule.isValidGrid(grid) === true);
+  });
+});
+
 

@@ -45,6 +45,13 @@ function Grid() {
     }
     return _rows[y][x];
   };
+  this.rowAt = function(y){
+    if (y >= this.height ||
+        y < 0){
+      throw 'out of bounds';
+    }
+    return _rows[y];
+  };
   /**
    * Bring the rows upwards by one and add a new row
    * of occupied tiles to the bottom.
@@ -76,11 +83,16 @@ function randomOccupiedTileState(){
   var randomFloat = Math.random() * (TileState.COUNT - TileState.A) + TileState.A;
   return Math.floor(randomFloat);
 }
+  
+function isValidGrid(grid){
+  return grid instanceof Grid;
+}
 
 module.exports = {
   Grid: Grid,
   TileState: TileState,
-  randomOccupiedTileState: randomOccupiedTileState
+  randomOccupiedTileState: randomOccupiedTileState,
+  isValidGrid: isValidGrid
 };
   
 })();
