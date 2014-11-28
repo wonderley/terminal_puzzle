@@ -34,8 +34,8 @@ function Grid() {
   };
   
   // public
-  this.height = 16;
-  this.width = 8;
+  this.height = 12;
+  this.width = 6;
   this.tileAt = function(x,y){
     if (x >= this.width ||
         y >= this.height ||

@@ -1,7 +1,7 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var gridModule = require('../grid.js');
+var gridModule = require('../bin/grid.js');
 var my_grid = new gridModule.Grid();
 
 describe('grid', function(){
@@ -12,14 +12,14 @@ describe('grid', function(){
 });
 
 describe('grid', function(){
-  it('height should default to 16', function(){
-    assert(my_grid.height === 16);
+  it('height should default to 12', function(){
+    assert(my_grid.height === 12);
   });
 });
      
 describe('grid', function(){
-  it('width should default to 8', function(){
-    assert(my_grid.width === 8);
+  it('width should default to 6', function(){
+    assert(my_grid.width === 6);
   });
 });
 
