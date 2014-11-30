@@ -9,27 +9,15 @@ describe('grid', function(){
     assert(my_grid.height !== undefined);
     assert(my_grid.width !== undefined);
   });
-});
-
-describe('grid', function(){
   it('height should default to 12', function(){
     assert(my_grid.height === 12);
   });
-});
-     
-describe('grid', function(){
   it('width should default to 6', function(){
     assert(my_grid.width === 6);
   });
-});
-
-describe('grid', function(){
   it('should allow access to tiles', function(){
     assert(my_grid.tileAt(0, 0) !== undefined);
   });
-});
-
-describe('grid', function(){
   it('should throw exception if I access tile with x too big', function(){
     var height = my_grid.height;
     var width = my_grid.width;
@@ -41,9 +29,6 @@ describe('grid', function(){
     }
     assert(threw);
   });
-});
-
-describe('grid', function(){
   it('should throw exception if I access tile with y too big', function(){
     var height = my_grid.height;
     var width = my_grid.width;
@@ -55,9 +40,6 @@ describe('grid', function(){
     }
     assert(threw);
   });
-});
-
-describe('grid', function(){
   it('should throw exception if I access tile with negative x', function(){
     var height = my_grid.height;
     var width = my_grid.width;
@@ -69,9 +51,6 @@ describe('grid', function(){
     }
     assert(threw);
   });
-});
-
-describe('grid', function(){
   it('should throw exception if I access tile with negative y', function(){
     var height = my_grid.height;
     var width = my_grid.width;
@@ -83,9 +62,6 @@ describe('grid', function(){
     }
     assert(threw);
   });
-});
-
-describe('grid', function(){
   it('should allow access to all valid tiles', function(){
     for(var x = 0; x < my_grid.width; ++x){
       for(var y = 0; y < my_grid.height; ++y){
@@ -94,9 +70,6 @@ describe('grid', function(){
       }
     }
   });
-});
-
-describe('grid', function(){
   it('should start with all tiles unoccupied', function(){
     for(var x = 0; x < my_grid.width; ++x){
       for(var y = 0; y < my_grid.height; ++y){
@@ -105,15 +78,9 @@ describe('grid', function(){
       }
     }
   });
-});
-
-describe('grid', function(){
   it('can have its rows advanced', function(){
     assert(my_grid.advanceRows !== undefined);
   });
-});
-
-describe('grid', function(){
   it('has bottom row occupied after row is advanced', function(){
     var grid = new gridModule.Grid();
     grid.advanceRows();
@@ -122,9 +89,6 @@ describe('grid', function(){
       assert(tile.state !== gridModule.TileState.EMPTY);
     }
   });
-});
-
-describe('grid', function(){
   it('shifts all rows up by one when rows are advanced', function(){
     var grid = new gridModule.Grid();
     var original_grid = [];
@@ -187,9 +151,6 @@ describe('rowAt', function(){
     }
     assert(threw);
   });
-});
-
-describe('rowAt', function(){
   it('should throw if row passed is negative', function(){
     var grid = new gridModule.Grid();
     var threw = false;
@@ -214,13 +175,35 @@ describe('isValidGrid', function(){
     assert(gridModule.isValidGrid(null) === false);
     assert(gridModule.isValidGrid(false) === false);
   });
-});
-
-describe('isValidGrid', function(){
   it('succeeds if a grid is passed', function(){
     var grid = new gridModule.Grid();
     assert(gridModule.isValidGrid(grid) === true);
   });
 });
 
+describe('Grid swapTilesAt', function(){
+  it('swaps the two tiles given their x and y values', function(){
+    var grid = new gridModule.Grid();
+    var tile1 = grid.tileAt(1,1);
+    var tile2 = grid.tileAt(2,1);
+    grid.swapTilesAt(1, 1, 2, 1);
+    assert(grid.tileAt(1,1) === tile2);
+    assert(grid.tileAt(2,1) === tile1);
+  });
+});
+
+describe('Grid columnAt', function(){
+  it('returns the tiles in the corresponding column', function(){
+    var grid = new gridModule.Grid();
+    var x = 2;
+    var column = [];
+    for (var y = 0; y < grid.height; ++y){
+      column.push(grid.tileAt(x, y));
+    }
+    var returnedColumn = grid.columnAt(x);
+    for (y = 0; y < grid.height; ++y){
+      assert(column[y] === returnedColumn[y]);
+    }
+  });
+});
 

@@ -36,6 +36,8 @@ function Grid() {
   // public
   this.height = 12;
   this.width = 6;
+  // this.gravityController = new GravityController(this);
+    // this.tileClearController = new TileClearController();
   this.tileAt = function(x,y){
     if (x >= this.width ||
         y >= this.height ||
@@ -51,6 +53,18 @@ function Grid() {
       throw 'out of bounds';
     }
     return _rows[y];
+  };
+  this.columnAt = function(x){
+    var column = [];
+    for (var y = 0; y < this.height; ++y){
+      column.push(this.tileAt(x, y));
+    }
+    return column;
+  };
+  this.swapTilesAt = function(x1, y1, x2, y2){
+    var tile1 = _rows[y1][x1];
+    _rows[y1][x1] = _rows[y2][x2];
+    _rows[y2][x2] = tile1;
   };
   /**
    * Bring the rows upwards by one and add a new row

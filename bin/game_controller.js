@@ -2,6 +2,7 @@
 var Grid = require('./grid.js');
 var TerminalGridView = require('./terminal_grid_view.js');
 var Cursor = require('./cursor.js');
+var TerminalInputController = require('./terminal_input_controller.js');
 
 (function(){
 
@@ -11,8 +12,8 @@ function GameController(){
   var _grid = new Grid.Grid();
   var _view = new TerminalGridView.TerminalGridView(_grid);
   var _cursor = new Cursor.Cursor(_grid, _view);
-// var _inputController = new InputController();
-  // var _tileClearController = new TileClearController();
+  var _inputController = new TerminalInputController.TerminalInputController(_cursor);
+  _view.setInputDelegate(_inputController);
   var _gameAdvanceIntervalInMillis = 5000;
   var advanceGame = function(){
     _grid.advanceRows();

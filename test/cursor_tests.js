@@ -360,3 +360,44 @@ describe('Cursor goRight', function(){
     assert(cursor.getY() === 1);
   });
 });
+
+describe('Cursor swapTiles', function(){
+  it('Calls swapTilesAt at the current position', function(){
+    var grid = new gridModule.Grid();
+    var x1Param = null,
+        y1Param = null,
+        x2Param = null,
+        y2Param = null;
+    grid.swapTilesAt = function(x1, y1, x2, y2){
+      x1Param = x1;
+      y1Param = y1;
+      x2Param = x2;
+      y2Param = y2;
+    };
+    var view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function(){};
+    view.drawCursorAt = function(){};
+    view.updateView = function(){};
+    var cursor = new cursorModule.Cursor(grid, view);
+    cursor.setPosition(1,1);
+    cursor.swapTiles();
+    assert(x1Param === 1);
+    assert(y1Param === 1);
+    assert(x2Param === 2);
+    assert(y2Param === 1);
+  });
+  it('Calls updateView', function(){
+    var grid = new gridModule.Grid();
+    var view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function(){};
+    view.drawCursorAt = function(){};
+    var updateViewCalled = false;
+    view.updateView = function(){
+      updateViewCalled = true;
+    };
+    var cursor = new cursorModule.Cursor(grid, view);
+    cursor.setPosition(1,1);
+    cursor.swapTiles();
+    assert(updateViewCalled);
+  });
+});

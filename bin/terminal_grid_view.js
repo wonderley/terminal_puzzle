@@ -1,6 +1,7 @@
 #! /usr/local/bin/node
 var Grid = require('./grid.js');
 var blessed = require('blessed');
+var InputDelegate = require('./input_delegate.js');
 
 (function(){
 
@@ -14,6 +15,7 @@ function TerminalGridView(gridMC){
   // Create a screen object.
   var _screen = null;
   var _rows = [];
+  var _inputDelegate = null;
   var colorForTileState = function(tileState){
     if (tileState === Grid.TileState.EMPTY){
       return 'default';
@@ -29,14 +31,11 @@ function TerminalGridView(gridMC){
     throw 'Invalid TileState.';
   };
   var registerKeys = function(){
-    // Quit on Escape, q, or Control-C.
-    _screen.key(['escape', 'q', 'C-c'], function(ch, key) {  
-      return process.exit(0);
-    });/*
     _screen.on('keypress', function(ch, key){
-      console.log(ch);
-      console.log(key);
-    });*/
+      if (_inputDelegate && key){
+        _inputDelegate.onUserInput(key);
+      }
+    });
   };
   this.initializeView = function(){
     _screen = blessed.screen();
@@ -128,7 +127,7 @@ function TerminalGridView(gridMC){
     var tileView = _rows[y][x];
     var tileView2 = _rows[y][x+1];
     tileView.border = {
-      fg: 'red',
+      fg: 'black',
       type: 'line'
     };
     tileView2.border = tileView.border;
@@ -141,6 +140,12 @@ function TerminalGridView(gridMC){
       fg: '#ffffff'
     };
     tileView2.border = tileView.border;
+  };
+  this.setInputDelegate = function(inputDelegate){
+    if (!InputDelegate.isInputDelegate(inputDelegate)){
+      throw 'Not an InputDelegate';
+    }
+    _inputDelegate = inputDelegate;
   };
 }
   

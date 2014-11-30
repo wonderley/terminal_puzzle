@@ -72,6 +72,10 @@ function Cursor(grid, view){
       this.setPosition(newX, newY);
     }
   };
+  this.swapTiles = function(){
+    _grid.swapTilesAt(_x, _y, _x + 1, _y);
+    _view.updateView();
+  };
 }
   
 function isValidCursor(cursor){
