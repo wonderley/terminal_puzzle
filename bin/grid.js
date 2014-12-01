@@ -36,8 +36,6 @@ function Grid() {
   // public
   this.height = 12;
   this.width = 6;
-  // this.gravityController = new GravityController(this);
-    // this.tileClearController = new TileClearController();
   this.tileAt = function(x,y){
     if (x >= this.width ||
         y >= this.height ||
