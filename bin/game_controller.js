@@ -13,10 +13,12 @@ var TileClearController = require('./tile_clear_controller.js');
 function GameController(){
   // public - GridDelegate method
   this.onGridChanged = function(){
+    _view.updateView();
     evaluateTilesToBeCleared();
   };
   
   // private
+  var that = this;
   var _grid = new Grid.Grid(this);
   var _view = new TerminalGridView.TerminalGridView(_grid);
   var _cursor = new Cursor.Cursor(_grid, _view);
@@ -27,10 +29,6 @@ function GameController(){
   var _gameAdvanceIntervalInMillis = 5000;
   var advanceGame = function(){
     _grid.advanceRows();
-    _view.updateView();
-    if (!_inputController.isLocked){
-      evaluateTilesToBeCleared();
-    }
   };
   var evaluateTilesToBeCleared = function(){
     _inputController.isLocked = true;
@@ -44,8 +42,7 @@ function GameController(){
       _view.updateView();
       setTimeout(function(){
         _gravityController.applyGravity();
-        _view.updateView();
-        evaluateTilesToBeCleared();
+        that.onGridChanged();
       }, 100);
     }, 500);
   };

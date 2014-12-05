@@ -76,9 +76,6 @@ function Grid(delegate) {
     var tile1 = _rows[y1][x1];
     _rows[y1][x1] = _rows[y2][x2];
     _rows[y2][x2] = tile1;
-    if (this.delegate){
-      this.delegate.onGridChanged();
-    }
   };
   /**
    * Bring the rows upwards by one and add a new row

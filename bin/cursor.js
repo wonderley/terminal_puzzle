@@ -74,7 +74,7 @@ function Cursor(grid, view){
   };
   this.swapTiles = function(){
     _grid.swapTilesAt(_x, _y, _x + 1, _y);
-    _view.updateView();
+    _grid.delegate.onGridChanged();
   };
 }
   

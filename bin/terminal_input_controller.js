@@ -13,7 +13,7 @@ function TerminalInputController(cursor){
   this.isLocked = false;
   this.onUserInput = function(input){
     if (this.isLocked){
-      return;
+      //return;
     }
     if (!input || !input.full){
       return;
