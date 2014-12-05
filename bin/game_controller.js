@@ -4,27 +4,56 @@ var TerminalGridView = require('./terminal_grid_view.js');
 var Cursor = require('./cursor.js');
 var TerminalInputController = require('./terminal_input_controller.js');
 var GravityController = require('./gravity_controller.js');
+var TileClearController = require('./tile_clear_controller.js');
 
 (function(){
 
 "use strict";
   
 function GameController(){
-  var _grid = new Grid.Grid();
+  // public - GridDelegate method
+  this.onGridChanged = function(){
+    evaluateTilesToBeCleared();
+  };
+  
+  // private
+  var _grid = new Grid.Grid(this);
   var _view = new TerminalGridView.TerminalGridView(_grid);
   var _cursor = new Cursor.Cursor(_grid, _view);
   var _inputController = new TerminalInputController.TerminalInputController(_cursor);
-  var _gravityController = new GravityController.GravityController(_grid, _view);
-    // this.tileClearController = new TileClearController();
   _view.setInputDelegate(_inputController);
+  var _gravityController = new GravityController.GravityController(_grid, _view);
+  var _tileClearController = new TileClearController.TileClearController(_grid);
   var _gameAdvanceIntervalInMillis = 5000;
   var advanceGame = function(){
     _grid.advanceRows();
     _view.updateView();
+    if (!_inputController.isLocked){
+      evaluateTilesToBeCleared();
+    }
   };
+  var evaluateTilesToBeCleared = function(){
+    _inputController.isLocked = true;
+    if (!_tileClearController.markTilesToClear()){
+      _inputController.isLocked = false;
+      return;
+    }
+    _view.updateView();
+    setTimeout(function(){
+      _tileClearController.clearMarkedTiles();
+      _view.updateView();
+      setTimeout(function(){
+        _gravityController.applyGravity();
+        _view.updateView();
+        evaluateTilesToBeCleared();
+      }, 100);
+    }, 500);
+  };
+  
+  // public
   this.startGame = function(){
     _view.initializeView();
-    _cursor.setPosition(0,0);
+    _cursor.setPosition(_grid.width / 2, _grid.height / 2);
     setInterval(advanceGame, _gameAdvanceIntervalInMillis);
   };
 }

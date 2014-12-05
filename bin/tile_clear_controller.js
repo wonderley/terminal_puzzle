@@ -7,6 +7,7 @@ var Grid = require('./grid.js');
 
 /**
  * Searches the grid for tiles that should be cleared.
+ * \return true if any tiles were marked to clear.
  */
 function TileClearController(grid){
   if (!Grid.isValidGrid(grid)){
@@ -14,18 +15,19 @@ function TileClearController(grid){
   }
   var _grid = grid;
   this.markTilesToClear = function(){
+    var somethingWasMarked = false;
     var markEachTile = function(tile, idx, arr){
       arr[idx].markedToClear = true;
     };
     var currentState = Grid.TileState.COUNT;
     var consecutiveTiles = [];
-    var markConsecutiveTilesInArray = function(tileCopy, idx, arr){
-      var tile = arr[idx];
+    function markConsecutiveTilesInArray(tile, idx, arr){
       if (tile.state !== Grid.TileState.EMPTY &&
           tile.state === currentState){
         consecutiveTiles.push(tile);
       } else {
         if (consecutiveTiles.length >= 3){
+          somethingWasMarked = true;
           consecutiveTiles.forEach(markEachTile);
         }
         consecutiveTiles = [tile];
@@ -33,6 +35,7 @@ function TileClearController(grid){
       if (idx === arr.length - 1){
         // Handle the last item
         if (consecutiveTiles.length >= 3){
+          somethingWasMarked = true;
           consecutiveTiles.forEach(markEachTile);
         }
         consecutiveTiles = [];
@@ -41,17 +44,26 @@ function TileClearController(grid){
       else {
         currentState = tile.state;
       }
-    };
-    // Iterate over each column and each row
-    _grid.columnAt(0).forEach(function (tile_cpy, y, arr){
+    }
+    // Iterate over each row and each column
+    for (var y = 0; y < _grid.height; ++y){
       _grid.rowAt(y).forEach(markConsecutiveTilesInArray);
-    });
-    _grid.rowAt(0).forEach(function (tile_cpy, x, arr){
+    }
+    for (var x = 0; x < _grid.width; ++x){
       _grid.columnAt(x).forEach(markConsecutiveTilesInArray);
-    });
+    }
+    return somethingWasMarked;
   };
   this.clearMarkedTiles = function(){
-    
+    function clearTileIfMarked(tile){
+      if (tile.markedToClear){
+        tile.state = Grid.TileState.EMPTY;
+        tile.markedToClear = false;
+      }
+    }
+    for (var y = 0; y < _grid.height; ++y){
+      _grid.rowAt(y).forEach(clearTileIfMarked);
+    }
   };
 }
 

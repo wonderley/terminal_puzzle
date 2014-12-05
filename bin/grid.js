@@ -1,10 +1,16 @@
 #! /usr/local/bin/node
+var GridDelegate = require('./grid_delegate.js');
 
 (function(){
 
 "use strict";
 
-function Grid() {
+function Grid(delegate) {
+  if (delegate !== null &&
+      delegate !== undefined &&
+      !GridDelegate.isGridDelegate(delegate)){
+    throw 'Invalid GridDelegate passed to Grid constructor';
+  }
   // private
   var _rows = [];
   var populate = function(){
@@ -28,12 +34,19 @@ function Grid() {
       row.push(tile);
     }
     _rows.push(row);
+    if (delegate){
+      delegate.onGridChanged();
+    }
   };
   var removeRow = function(){
     _rows.shift();
+    if (delegate){
+      delegate.onGridChanged();
+    }
   };
   
   // public
+  this.delegate = delegate;
   this.height = 12;
   this.width = 6;
   this.tileAt = function(x,y){
@@ -63,6 +76,9 @@ function Grid() {
     var tile1 = _rows[y1][x1];
     _rows[y1][x1] = _rows[y2][x2];
     _rows[y2][x2] = tile1;
+    if (this.delegate){
+      this.delegate.onGridChanged();
+    }
   };
   /**
    * Bring the rows upwards by one and add a new row
@@ -88,6 +104,7 @@ var TileState = {
 function Tile(){
   this.state = TileState.EMPTY;
   this.id = __tileCount;
+  this.markedToClear = false;
   __tileCount += 1;
 }
   

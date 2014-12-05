@@ -16,7 +16,11 @@ function TerminalGridView(gridMC){
   var _screen = null;
   var _rows = [];
   var _inputDelegate = null;
-  var colorForTileState = function(tileState){
+  var colorForTile = function(tile){
+    if (tile.markedToClear){
+      return 'black';
+    }
+    var tileState = tile.state;
     if (tileState === Grid.TileState.EMPTY){
       return 'default';
     } else if (tileState === Grid.TileState.A){
@@ -26,7 +30,7 @@ function TerminalGridView(gridMC){
     } else if (tileState === Grid.TileState.C){
       return 'blue';
     } else if (tileState === Grid.TileState.D){
-      return 'black';
+      return '#f3f449';
     }
     throw 'Invalid TileState.';
   };
@@ -116,7 +120,7 @@ function TerminalGridView(gridMC){
       for (var y = 0; y < _gridMC.height; ++y){
         var tile = _gridMC.tileAt(x,y);
         var tileView = _rows[y][x];
-        var color = colorForTileState(tile.state);
+        var color = colorForTile(tile);
         tileView.style.bg = color;
       }
     }

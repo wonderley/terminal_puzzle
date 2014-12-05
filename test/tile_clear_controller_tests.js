@@ -167,4 +167,75 @@ describe('TileClearController markTilesToClear', function(){
     assert(tile4.markedToClear);
     assert(tile5.markedToClear);
   });
+  it('returns true if any tiles are marked to clear', function(){
+    var grid = new gridModule.Grid();
+    var controller = new tileClearControllerModule.TileClearController(grid);
+    var bottomY = grid.height - 1;
+    var tile1 = grid.tileAt(2, bottomY);
+    var tile2 = grid.tileAt(3, bottomY);
+    var tile3 = grid.tileAt(4, bottomY);
+    tile1.state = gridModule.TileState.A;
+    tile2.state = gridModule.TileState.A;
+    tile3.state = gridModule.TileState.A;
+    var somethingWasMarked = controller.markTilesToClear();
+    assert(somethingWasMarked);
+  });
+  it('returns false if no tiles are marked to clear', function(){
+    var grid = new gridModule.Grid();
+    var controller = new tileClearControllerModule.TileClearController(grid);
+    var bottomY = grid.height - 1;
+    var tile1 = grid.tileAt(2, bottomY);
+    var tile2 = grid.tileAt(3, bottomY);
+    var tile3 = grid.tileAt(4, bottomY);
+    tile1.state = gridModule.TileState.A;
+    tile2.state = gridModule.TileState.B;
+    tile3.state = gridModule.TileState.A;
+    var somethingWasMarked = controller.markTilesToClear();
+    assert(!somethingWasMarked);
+  });
+});
+
+describe('TileClearController clearMarkedTiles', function(){
+  it('sets all marked tiles to empty', function(){
+    var grid = new gridModule.Grid();
+    var controller = new tileClearControllerModule.TileClearController(grid);
+    var tile1 = grid.tileAt(2, 0);
+    var tile2 = grid.tileAt(2, 1);
+    var tile3 = grid.tileAt(2, 2);
+    var tile4 = grid.tileAt(1, 0);
+    tile1.markedToClear = true;
+    tile2.markedToClear = true;
+    tile3.markedToClear = true;
+    tile4.markedToClear = true;
+    tile1.state = gridModule.TileState.A;
+    tile2.state = gridModule.TileState.B;
+    tile3.state = gridModule.TileState.C;
+    tile4.state = gridModule.TileState.D;
+    controller.clearMarkedTiles();
+    assert(tile1.state === gridModule.TileState.EMPTY);
+    assert(tile2.state === gridModule.TileState.EMPTY);
+    assert(tile3.state === gridModule.TileState.EMPTY);
+    assert(tile4.state === gridModule.TileState.EMPTY);
+  });
+  it('unmarks all marked tiles', function(){
+    var grid = new gridModule.Grid();
+    var controller = new tileClearControllerModule.TileClearController(grid);
+    var tile1 = grid.tileAt(2, 0);
+    var tile2 = grid.tileAt(2, 1);
+    var tile3 = grid.tileAt(2, 2);
+    var tile4 = grid.tileAt(1, 0);
+    tile1.markedToClear = true;
+    tile2.markedToClear = true;
+    tile3.markedToClear = true;
+    tile4.markedToClear = true;
+    tile1.state = gridModule.TileState.A;
+    tile2.state = gridModule.TileState.B;
+    tile3.state = gridModule.TileState.C;
+    tile4.state = gridModule.TileState.D;
+    controller.clearMarkedTiles();
+    assert(tile1.markedToClear === false);
+    assert(tile2.markedToClear === false);
+    assert(tile3.markedToClear === false);
+    assert(tile4.markedToClear === false);
+  });
 });

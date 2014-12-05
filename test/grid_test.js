@@ -2,6 +2,7 @@
 /* global require, describe, it */
 var assert = require('assert');
 var gridModule = require('../bin/grid.js');
+var gridDelegateModule = require('../bin/grid_delegate.js');
 var my_grid = new gridModule.Grid();
 
 describe('grid', function(){
@@ -111,6 +112,34 @@ describe('grid', function(){
         assert(tile.id === sameTileInNewPosition.id);
       });
     });
+  });
+  it('accepts a GridDelegate as the first argument to its constructor', function(){
+    var delegate = {};
+    var tmp = gridDelegateModule.isGridDelegate;
+    var grid;
+    var threw = false;
+    try{
+      gridDelegateModule.isGridDelegate = function(){ return true; };
+      grid = new gridModule.Grid(delegate);
+    } catch (e) {
+      threw = true;
+    } finally {
+      assert(!threw);
+      assert(grid.delegate === delegate);
+      gridDelegateModule.isGridDelegate = tmp;
+    }
+  });
+  it('throws if an invalid GridDelegate is passed', function(){
+    var delegate = {};
+    var grid;
+    var threw = false;
+    try{
+      grid = new gridModule.Grid(delegate);
+    } catch (e) {
+      threw = true;
+    } finally {
+      assert(threw);
+    }
   });
 });
 

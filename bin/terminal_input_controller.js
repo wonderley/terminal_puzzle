@@ -10,7 +10,11 @@ function TerminalInputController(cursor){
     throw 'Invalid cursor';
   }
   var _cursor = cursor;
+  this.isLocked = false;
   this.onUserInput = function(input){
+    if (this.isLocked){
+      return;
+    }
     if (!input || !input.full){
       return;
     }
