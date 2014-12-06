@@ -386,18 +386,21 @@ describe('Cursor swapTiles', function(){
     assert(x2Param === 2);
     assert(y2Param === 1);
   });
-  it('Calls updateView', function(){
+  it('Calls onGridChanged', function(){
     var grid = new gridModule.Grid();
     var view = new terminalGridModule.TerminalGridView(grid);
+    grid.delegate = {};
     view.clearCursorAt = function(){};
     view.drawCursorAt = function(){};
-    var updateViewCalled = false;
+    var onGridChangedCalled = false;
+    grid.delegate.onGridChanged = function(){
+     onGridChangedCalled = true;
+    };
     view.updateView = function(){
-      updateViewCalled = true;
     };
     var cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
     cursor.swapTiles();
-    assert(updateViewCalled);
+    assert(onGridChangedCalled);
   });
 });

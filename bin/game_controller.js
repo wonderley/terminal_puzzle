@@ -14,26 +14,15 @@ function GameController(){
   // public - GridDelegate method
   this.onGridChanged = function(){
     _view.updateView();
-    evaluateTilesToBeCleared();
+    setTimeout(function(){
+      _gravityController.applyGravity();
+      _view.updateView();
+      evaluateGrid();
+    }, 200);
   };
-  
-  // private
   var that = this;
-  var _grid = new Grid.Grid(this);
-  var _view = new TerminalGridView.TerminalGridView(_grid);
-  var _cursor = new Cursor.Cursor(_grid, _view);
-  var _inputController = new TerminalInputController.TerminalInputController(_cursor);
-  _view.setInputDelegate(_inputController);
-  var _gravityController = new GravityController.GravityController(_grid, _view);
-  var _tileClearController = new TileClearController.TileClearController(_grid);
-  var _gameAdvanceIntervalInMillis = 5000;
-  var advanceGame = function(){
-    _grid.advanceRows();
-  };
-  var evaluateTilesToBeCleared = function(){
-    _inputController.isLocked = true;
+  var evaluateGrid = function(){
     if (!_tileClearController.markTilesToClear()){
-      _inputController.isLocked = false;
       return;
     }
     _view.updateView();
@@ -41,11 +30,22 @@ function GameController(){
       _tileClearController.clearMarkedTiles();
       _view.updateView();
       setTimeout(function(){
-        _gravityController.applyGravity();
         that.onGridChanged();
       }, 100);
     }, 500);
   };
+  var _grid = new Grid.Grid(this);
+  var _view = new TerminalGridView.TerminalGridView(_grid);
+  var _cursor = new Cursor.Cursor(_grid, _view);
+  var _inputController = new TerminalInputController.TerminalInputController(_cursor);
+  _view.setInputDelegate(_inputController);
+  var _gravityController = new GravityController.GravityController(_grid, _view);
+  var _tileClearController = new TileClearController.TileClearController(_grid);
+  var _gameAdvanceIntervalInMillis = 2200;
+  var advanceGame = function(){
+    _grid.advanceRows();
+  };
+  
   
   // public
   this.startGame = function(){

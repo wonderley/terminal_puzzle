@@ -36,7 +36,9 @@ function GravityController(grid, view){
     for (var y = _grid.height - 2; y >= 0; --y){
       var row = _grid.rowAt(y);
       for (var x = 0; x < _grid.width; ++x){
-        dropTileAt(x, y);
+        if (_grid.tileAt(x, y).state !== Grid.TileState.EMPTY){
+          dropTileAt(x, y);
+        }
       }
     }
   };
