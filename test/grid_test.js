@@ -143,13 +143,87 @@ describe('grid', function(){
   });
 });
 
+describe('TileState allOccupied', function(){
+  it('returns all valid occupied states', function(){
+    var validStates = gridModule.TileState.allOccupied();
+    assert(validStates[0] === gridModule.TileState.EMPTY + 1);
+    assert(validStates[validStates.length - 1] === gridModule.TileState.COUNT - 1);
+    assert(validStates.length === gridModule.TileState.COUNT - 1);
+  });
+});
+
 describe('randomOccupiedTileState', function(){
   it('only returns valid occupied tile states', function(){
     for (var i = 0; i < 100; ++i){
-      var randomState = gridModule.randomOccupiedTileState();
+      var validStates = gridModule.TileState.allOccupied();
+      var randomState = gridModule.randomOccupiedTileState(validStates);
       assert(randomState > gridModule.TileState.EMPTY);
       assert(randomState < gridModule.TileState.COUNT);
     }
+  });
+  it('requires a list of valid allowed tile states', function(){
+    var threw = false;
+    try{
+      gridModule.randomOccupiedTileState();
+    } catch (e){
+      threw = true;
+    }
+    assert(threw);
+    threw = false;
+    try{
+      gridModule.randomOccupiedTileState([]);
+    } catch (e){
+      threw = true;
+    }
+    assert(threw);
+    threw = false;
+    try{
+      gridModule.randomOccupiedTileState([gridModule.TileState.EMPTY]);
+    } catch (e){
+      threw = true;
+    }
+    assert(threw);
+    threw = false;
+    try{
+      gridModule.randomOccupiedTileState([gridModule.TileState.COUNT]);
+    } catch (e){
+      threw = true;
+    }
+    assert(threw);    
+  });
+  it('Returns tiles with the allowed states', function(){
+    var allowedStates = gridModule.TileState.allOccupied();
+    var usedStates = {};
+    // Make sure each state gets used at least once
+    allowedStates.forEach(function(state){
+      usedStates[state.toString()] = false;
+    });
+    for (var i = 0; i < 100; ++i){
+      var state = gridModule.randomOccupiedTileState(allowedStates);
+      assert(state > gridModule.TileState.EMPTY);
+      assert(state < gridModule.TileState.COUNT);
+      usedStates[state.toString()] = true;
+    }
+    allowedStates.forEach(function(state){
+      assert(usedStates[state.toString()] === true);
+    });
+  });
+  it('Only uses the passed states even if it\'s not all of them', function(){
+    var allowedStates = [gridModule.TileState.A, gridModule.TileState.C];
+    var usedStates = {};
+    // Make sure each state gets used at least once
+    allowedStates.forEach(function(state){
+      usedStates[state.toString()] = false;
+    });
+    for (var i = 0; i < 100; ++i){
+      var state = gridModule.randomOccupiedTileState(allowedStates);
+      assert(state > gridModule.TileState.EMPTY);
+      assert(state < gridModule.TileState.COUNT);
+      usedStates[state.toString()] = true;
+    }
+    allowedStates.forEach(function(state){
+      assert(usedStates[state.toString()] === true);
+    });
   });
 });
 
@@ -233,6 +307,65 @@ describe('Grid columnAt', function(){
     for (y = 0; y < grid.height; ++y){
       assert(column[y] === returnedColumn[y]);
     }
+  });
+});
+
+describe('Grid generateRandomRow', function(){
+  it('returns an array of tiles with the right width', function(){
+    var grid = new gridModule.Grid();
+    var row = grid.generateRandomRow();
+    assert(row.length === grid.width);
+  });
+  it('normally passes all occupied states to randomOccupiedTileState', function(){
+    var grid = new gridModule.Grid();
+    var allowedStates_arg = null;
+    var tmp = gridModule.randomOccupiedTileState;
+    gridModule.randomOccupiedTileState = function(allowedStates){
+      allowedStates_arg = allowedStates;
+    };
+    grid.generateRandomRow();
+    var allOccupied = gridModule.TileState.allOccupied();
+    assert(allOccupied.length === allowedStates_arg.length);
+    allowedStates_arg.forEach(function(state, idx){
+      assert(state === allOccupied[idx]);
+    });
+    gridModule.randomOccupiedTileState = tmp;
+  });
+  it('does not allow three consecutive tiles of the same state', function(){
+    var grid = new gridModule.Grid();
+    var tmp = gridModule.randomOccupiedTileState;
+    
+    // Use these two functions to enforce that A should be allowed
+    // the first two times, but not the third.
+    var checkThatAIsAllowedCalledCount = 0;
+    function checkThatAIsAllowedAndReturnA(allowedStates){
+      var aFound = false;
+      for (var i = 0; i < allowedStates.length; ++i){
+        if (allowedStates[i] === gridModule.TileState.A){
+          aFound = true;
+        }
+      }
+      assert(aFound);
+      checkThatAIsAllowedCalledCount += 1;
+      if (checkThatAIsAllowedCalledCount === 2){
+        gridModule.randomOccupiedTileState = checkThatAIsNotAllowedAndReturnB;
+      }
+      return gridModule.TileState.A;
+    }
+    function checkThatAIsNotAllowedAndReturnB(allowedStates){
+      var aFound = false;
+      for (var i = 0; i < allowedStates.length; ++i){
+        if (allowedStates[i] === gridModule.TileState.A){
+          aFound = true;
+        }
+      }
+      assert(!aFound);
+      checkThatAIsAllowedCalledCount = 0;
+      gridModule.randomOccupiedTileState = checkThatAIsAllowedAndReturnA;
+      return gridModule.TileState.B;
+    }
+    gridModule.randomOccupiedTileState = checkThatAIsAllowedAndReturnA;
+    grid.generateRandomRow();
   });
 });
 

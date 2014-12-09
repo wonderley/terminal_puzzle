@@ -27,12 +27,7 @@ function Grid(delegate) {
     _rows.push(row);
   };
   var addPopulatedRow = function(){
-    var row = [];
-    for (var j = 0; j < that.width; ++j) {
-      var tile = new Tile();
-      tile.state = randomOccupiedTileState();
-      row.push(tile);
-    }
+    var row = that.generateRandomRow();
     _rows.push(row);
     if (delegate){
       delegate.onGridChanged();
@@ -49,6 +44,34 @@ function Grid(delegate) {
   this.delegate = delegate;
   this.height = 12;
   this.width = 6;
+  this.generateRandomRow = function(width){
+    var row = [];
+    var lastTileState = {
+      state: TileState.COUNT,
+      count: 0
+    };
+    var isNotLastTileState = function(state){
+      return state !== lastTileState.state;
+    };
+    var allowedStates = TileState.allOccupied();
+    for (var j = 0; j < that.width; ++j) {
+      var tile = new Tile();
+      if (lastTileState.count >= 2){
+        // Remove the state from the list of the allowed states
+        allowedStates = allowedStates.filter(isNotLastTileState);
+      }
+      tile.state = module.exports.randomOccupiedTileState(allowedStates);
+      if (tile.state === lastTileState.state){
+        lastTileState.count += 1;
+      } else {
+        lastTileState.state = tile.state;
+        lastTileState.count = 1;
+        allowedStates = TileState.allOccupied();
+      }
+      row.push(tile);
+    }
+    return row;
+  };
   this.tileAt = function(x,y){
     if (x >= this.width ||
         y >= this.height ||
@@ -91,12 +114,15 @@ function Grid(delegate) {
 
 var __tileCount = 0;
 var TileState = {
-    EMPTY: 0,
-    A: 1,
-    B: 2,
-    C: 3,
-    D: 4,
-    COUNT: 5
+  EMPTY: 0,
+  A: 1,
+  B: 2,
+  C: 3,
+  D: 4,
+  COUNT: 5,
+  allOccupied: function(){
+    return [this.A, this.B, this.C, this.D];
+  }
 };
 function Tile(){
   this.state = TileState.EMPTY;
@@ -105,9 +131,19 @@ function Tile(){
   __tileCount += 1;
 }
   
-function randomOccupiedTileState(){
-  var randomFloat = Math.random() * (TileState.COUNT - TileState.A) + TileState.A;
-  return Math.floor(randomFloat);
+function randomOccupiedTileState(allowedStates){
+  if (!Array.isArray(allowedStates)||
+      allowedStates.length === 0){
+    throw 'Did not pass an array of allowed states.';
+  }
+  allowedStates.forEach(function(state){
+    if (state <= TileState.EMPTY || state >= TileState.COUNT){
+      throw 'Invalid tile state';
+    }
+  });
+  var randomFloat = Math.random() * (allowedStates.length);
+  var tileIndex = Math.floor(randomFloat);
+  return allowedStates[tileIndex];
 }
   
 function isValidGrid(grid){
