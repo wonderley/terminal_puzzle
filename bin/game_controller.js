@@ -41,9 +41,12 @@ function GameController(){
   _view.setInputDelegate(_inputController);
   var _gravityController = new GravityController.GravityController(_grid, _view);
   var _tileClearController = new TileClearController.TileClearController(_grid);
-  var _gameAdvanceIntervalInMillis = 2200;
+  var _gameAdvanceIntervalInMillis = 3000;
   var advanceGame = function(){
     _grid.advanceRows();
+    if (_cursor.getY() > 0){
+      _cursor.setPosition(_cursor.getX(), _cursor.getY() - 1);
+    }
   };
   
   
