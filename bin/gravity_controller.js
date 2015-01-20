@@ -1,4 +1,4 @@
-#! /usr/local/bin/node
+#! /usr/bin/env node
 var Grid = require('./grid.js');
 var View = require('./terminal_grid_view');
 

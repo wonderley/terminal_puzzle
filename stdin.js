@@ -1,4 +1,4 @@
-#! /usr/local/bin/node
+#! /usr/bin/env node
 process.stdin.on('data', processInput);
 
 function processInput (buf) {

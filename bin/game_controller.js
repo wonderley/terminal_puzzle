@@ -1,4 +1,4 @@
-#! /usr/local/bin/node
+#! /usr/bin/env node
 var Grid = require('./grid.js');
 var TerminalGridView = require('./terminal_grid_view.js');
 var Cursor = require('./cursor.js');

@@ -1,4 +1,4 @@
-#! /usr/local/bin/node
+#! /usr/bin/env node
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');

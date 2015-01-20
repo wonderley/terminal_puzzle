@@ -1,0 +1,12 @@
+{
+  "author": "Lucas Wonderley",
+  "name": "tetris_attack",
+  "description": "Play Tetris Attack in your terminal",
+  "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/wonderlr/tetris_attack"
+  },
+  "dependencies": {
+    "blessed": ">= 0.0.37"
+  }
+}  

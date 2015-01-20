@@ -1,4 +1,4 @@
-#! /usr/local/bin/node
+#! /usr/bin/env node
 var Grid = require('./grid.js');
 var blessed = require('blessed');
 var InputDelegate = require('./input_delegate.js');
