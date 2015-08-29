@@ -11,7 +11,7 @@ var TileClearController = require('./tile_clear_controller.js');
 "use strict";
   
 function GameController(){
-  // public - GridDelegate method
+  // public - GridDelegate methods
   this.onGridChanged = function(){
     _view.updateView();
     setTimeout(function(){
@@ -19,6 +19,10 @@ function GameController(){
       _view.updateView();
       evaluateGrid();
     }, 200);
+  };
+  this.onGameOver = function(){
+    clearInterval(advanceGameIntervalId);
+    advanceGameIntervalId = setInterval(advanceGame, _gameAdvanceIntervalInMillis);
   };
   var that = this;
   var evaluateGrid = function(){
@@ -48,13 +52,13 @@ function GameController(){
       _cursor.setPosition(_cursor.getX(), _cursor.getY() - 1);
     }
   };
-  
-  
+  var advanceGameIntervalId = null;
+
   // public
   this.startGame = function(){
     _view.initializeView();
     _cursor.setPosition(_grid.width / 2, _grid.height / 2);
-    setInterval(advanceGame, _gameAdvanceIntervalInMillis);
+    advanceGameIntervalId = setInterval(advanceGame, _gameAdvanceIntervalInMillis);
   };
 }
   

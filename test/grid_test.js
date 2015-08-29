@@ -367,5 +367,27 @@ describe('Grid generateRandomRow', function(){
     gridModule.randomOccupiedTileState = checkThatAIsAllowedAndReturnA;
     grid.generateRandomRow();
   });
+  it('has reasonable dimensions', function(){
+    var grid = new gridModule.Grid();
+    assert(grid.height >= 5);
+    assert(grid.width >= 5);
+  });
 });
 
+describe('Grid advanceRows', function(){
+  it('calls onGameOver on delegate if it is called when tiles are at the top', function(){
+    var grid = new gridModule.Grid();
+    var onGameOverCalls = 0;
+    grid.delegate = {
+      onGameOver: function(){
+        onGameOverCalls += 1;
+      }
+    };
+    for (var i = 0; i < grid.height; ++i){
+      grid.advanceRows();
+      assert(onGameOverCalls === 0);
+    }
+    grid.advanceRows();
+    assert(onGameOverCalls === 1);
+  });
+});

@@ -5,7 +5,9 @@
 "use strict";
   
 function isGridDelegate(obj){
-  return typeof obj.onGridChanged === 'function';
+  var ret = typeof obj.onGridChanged === 'function';
+  ret = ret && typeof obj.onGameOver === 'function';
+  return ret;
 }
 
 module.exports = {

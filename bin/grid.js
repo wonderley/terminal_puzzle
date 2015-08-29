@@ -106,6 +106,14 @@ function Grid(delegate) {
    */
   this.advanceRows = function() {
     addPopulatedRow();
+    var topRow = _rows[0];
+    for (var i = 0; i < topRow.length; ++i){
+      var topTile = topRow[i];
+      if(topTile.state !== TileState.EMPTY){
+        that.delegate.onGameOver();
+        return;
+      }
+    }
     removeRow();
   };
   var that = this; 
