@@ -60,8 +60,8 @@ describe('Cursor isValidCursorPosition', function(){
     var grid = new gridModule.Grid();
     var view = new terminalGridModule.TerminalGridView(grid);
     var cursor = new cursorModule.Cursor(grid, view);
-    for (var x = 0; x < grid.width - 1; ++x){
-      for (var y = 0; y < grid.height; ++y){
+    for (var x = 0; x < grid.columnCount - 1; ++x){
+      for (var y = 0; y < grid.rowCount; ++y){
         assert(cursor.isValidCursorPosition(x,y) === true);
       }
     }
@@ -74,13 +74,13 @@ describe('Cursor isValidCursorPosition', function(){
     var view = new terminalGridModule.TerminalGridView(grid);
     var cursor = new cursorModule.Cursor(grid, view);
     // Tiles furthest to the right
-    for (var y = 0; y < grid.height; ++y){
+    for (var y = 0; y < grid.rowCount; ++y){
       assert(cursor.isValidCursorPosition(-1,y) === false);
-      assert(cursor.isValidCursorPosition(grid.width,y) === false);
+      assert(cursor.isValidCursorPosition(grid.columnCount,y) === false);
     }
-    for (var x = 0; x < grid.width; ++x){
+    for (var x = 0; x < grid.columnCount; ++x){
       assert(cursor.isValidCursorPosition(x,-1) === false);
-      assert(cursor.isValidCursorPosition(x,grid.height) === false);
+      assert(cursor.isValidCursorPosition(x,grid.rowCount) === false);
     }
   });
 });
@@ -91,13 +91,13 @@ describe('Cursor isValidCursorPosition', function(){
     var view = new terminalGridModule.TerminalGridView(grid);
     var cursor = new cursorModule.Cursor(grid, view);
     // Tiles furthest to the right
-    for (var y = 0; y < grid.height; ++y){
+    for (var y = 0; y < grid.rowCount; ++y){
       assert(cursor.isValidCursorPosition(-2,y) === false);
-      assert(cursor.isValidCursorPosition(grid.width - 1,y) === false);
+      assert(cursor.isValidCursorPosition(grid.columnCount - 1,y) === false);
     }
-    for (var x = 0; x < grid.width; ++x){
+    for (var x = 0; x < grid.columnCount; ++x){
       assert(cursor.isValidCursorPosition(x - 1,-1) === false);
-      assert(cursor.isValidCursorPosition(x - 1,grid.height) === false);
+      assert(cursor.isValidCursorPosition(x - 1,grid.rowCount) === false);
     }
   });
 });

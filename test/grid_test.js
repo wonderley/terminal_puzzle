@@ -7,21 +7,21 @@ var my_grid = new gridModule.Grid();
 
 describe('grid', function(){
   it('should have height and width', function(){
-    assert(my_grid.height !== undefined);
-    assert(my_grid.width !== undefined);
+    assert(my_grid.rowCount !== undefined);
+    assert(my_grid.columnCount !== undefined);
   });
   it('height should default to 12', function(){
-    assert(my_grid.height === 12);
+    assert(my_grid.rowCount === 12);
   });
   it('width should default to 6', function(){
-    assert(my_grid.width === 6);
+    assert(my_grid.columnCount === 6);
   });
   it('should allow access to tiles', function(){
     assert(my_grid.tileAt(0, 0) !== undefined);
   });
   it('should throw exception if I access tile with x too big', function(){
-    var height = my_grid.height;
-    var width = my_grid.width;
+    var height = my_grid.rowCount;
+    var width = my_grid.columnCount;
     var threw = false;
     try {
       my_grid.tileAt(width, 0);
@@ -31,8 +31,8 @@ describe('grid', function(){
     assert(threw);
   });
   it('should throw exception if I access tile with y too big', function(){
-    var height = my_grid.height;
-    var width = my_grid.width;
+    var height = my_grid.rowCount;
+    var width = my_grid.columnCount;
     var threw = false;
     try {
       my_grid.tileAt(0, height);
@@ -42,8 +42,8 @@ describe('grid', function(){
     assert(threw);
   });
   it('should throw exception if I access tile with negative x', function(){
-    var height = my_grid.height;
-    var width = my_grid.width;
+    var height = my_grid.rowCount;
+    var width = my_grid.columnCount;
     var threw = false;
     try {
       my_grid.tileAt(-1, 0);
@@ -53,8 +53,8 @@ describe('grid', function(){
     assert(threw);
   });
   it('should throw exception if I access tile with negative y', function(){
-    var height = my_grid.height;
-    var width = my_grid.width;
+    var height = my_grid.rowCount;
+    var width = my_grid.columnCount;
     var threw = false;
     try {
       my_grid.tileAt(0, -1);
@@ -64,16 +64,16 @@ describe('grid', function(){
     assert(threw);
   });
   it('should allow access to all valid tiles', function(){
-    for(var x = 0; x < my_grid.width; ++x){
-      for(var y = 0; y < my_grid.height; ++y){
+    for(var x = 0; x < my_grid.columnCount; ++x){
+      for(var y = 0; y < my_grid.rowCount; ++y){
         var tile = my_grid.tileAt(x, y);
         assert(tile !== undefined);
       }
     }
   });
   it('should start with all tiles unoccupied', function(){
-    for(var x = 0; x < my_grid.width; ++x){
-      for(var y = 0; y < my_grid.height; ++y){
+    for(var x = 0; x < my_grid.columnCount; ++x){
+      for(var y = 0; y < my_grid.rowCount; ++y){
         var tile = my_grid.tileAt(x, y);
         assert(tile.state === gridModule.TileState.EMPTY);
       }
@@ -85,17 +85,17 @@ describe('grid', function(){
   it('has bottom row occupied after row is advanced', function(){
     var grid = new gridModule.Grid();
     grid.advanceRows();
-    for(var x = 0; x < grid.width; ++x){
-      var tile = grid.tileAt(x, grid.height - 1);
+    for(var x = 0; x < grid.columnCount; ++x){
+      var tile = grid.tileAt(x, grid.rowCount - 1);
       assert(tile.state !== gridModule.TileState.EMPTY);
     }
   });
   it('shifts all rows up by one when rows are advanced', function(){
     var grid = new gridModule.Grid();
     var original_grid = [];
-    for(var y = 0; y < grid.height; ++y){
+    for(var y = 0; y < grid.rowCount; ++y){
       var row = [];
-      for(var x = 0; x < grid.width; ++x){
+      for(var x = 0; x < grid.columnCount; ++x){
         var tile = grid.tileAt(x, y);
         row.push(tile);
       }
@@ -233,10 +233,10 @@ describe('rowAt', function(){
     grid.advanceRows();
     // Get the values in the newly created row
     var manuallyGeneratedRow = [];
-    for(var x = 0; x < grid.width; ++x){
-      manuallyGeneratedRow.push(grid.tileAt(x, grid.height - 1));
+    for(var x = 0; x < grid.columnCount; ++x){
+      manuallyGeneratedRow.push(grid.tileAt(x, grid.rowCount - 1));
     }
-    var returnedRow = grid.rowAt(grid.height - 1);
+    var returnedRow = grid.rowAt(grid.rowCount - 1);
     returnedRow.forEach(function(tile, idx){
       assert(tile.state === manuallyGeneratedRow[idx].state);
     });
@@ -248,7 +248,7 @@ describe('rowAt', function(){
     var grid = new gridModule.Grid();
     var threw = false;
     try {
-      grid.rowAt(grid.height);
+      grid.rowAt(grid.rowCount);
     } catch (e) {
       threw = true;
     }
@@ -300,11 +300,11 @@ describe('Grid columnAt', function(){
     var grid = new gridModule.Grid();
     var x = 2;
     var column = [];
-    for (var y = 0; y < grid.height; ++y){
+    for (var y = 0; y < grid.rowCount; ++y){
       column.push(grid.tileAt(x, y));
     }
     var returnedColumn = grid.columnAt(x);
-    for (y = 0; y < grid.height; ++y){
+    for (y = 0; y < grid.rowCount; ++y){
       assert(column[y] === returnedColumn[y]);
     }
   });
@@ -314,7 +314,7 @@ describe('Grid generateRandomRow', function(){
   it('returns an array of tiles with the right width', function(){
     var grid = new gridModule.Grid();
     var row = grid.generateRandomRow();
-    assert(row.length === grid.width);
+    assert(row.length === grid.columnCount);
   });
   it('normally passes all occupied states to randomOccupiedTileState', function(){
     var grid = new gridModule.Grid();
@@ -369,8 +369,8 @@ describe('Grid generateRandomRow', function(){
   });
   it('has reasonable dimensions', function(){
     var grid = new gridModule.Grid();
-    assert(grid.height >= 5);
-    assert(grid.width >= 5);
+    assert(grid.rowCount >= 5);
+    assert(grid.columnCount >= 5);
   });
 });
 
@@ -383,7 +383,7 @@ describe('Grid advanceRows', function(){
         onGameOverCalls += 1;
       }
     };
-    for (var i = 0; i < grid.height; ++i){
+    for (var i = 0; i < grid.rowCount; ++i){
       grid.advanceRows();
       assert(onGameOverCalls === 0);
     }

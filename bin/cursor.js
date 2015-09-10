@@ -25,9 +25,9 @@ function Cursor(grid, view){
   };
   this.isValidCursorPosition = function(x,y){
     return x >= 0 &&
-      x < _grid.width - 1 &&
+      x < _grid.columnCount - 1 &&
       y >= 0 &&
-      y < _grid.height;
+      y < _grid.rowCount;
   };
   this.setPosition = function(x,y){
     if (!this.isValidCursorPosition(x,y)){

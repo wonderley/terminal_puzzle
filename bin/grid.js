@@ -14,13 +14,13 @@ function Grid(delegate) {
   // private
   var _rows = [];
   var populate = function(){
-    for (var i = 0; i < that.height; ++i) {
+    for (var i = 0; i < that.rowCount; ++i) {
       addRow();
     }
   };
   var addRow = function(){
     var row = [];
-    for (var j = 0; j < that.width; ++j) {
+    for (var j = 0; j < that.columnCount; ++j) {
       var tile = new Tile();
       row.push(tile);
     }
@@ -42,9 +42,10 @@ function Grid(delegate) {
   
   // public
   this.delegate = delegate;
-  this.height = 12;
-  this.width = 6;
-  this.generateRandomRow = function(width){
+  this.subrowsPerRow = 3;
+  this.rowCount = 12;
+  this.columnCount = 6;
+  this.generateRandomRow = function(columnCount){
     var row = [];
     var lastTileState = {
       state: TileState.COUNT,
@@ -54,7 +55,7 @@ function Grid(delegate) {
       return state !== lastTileState.state;
     };
     var allowedStates = TileState.allOccupied();
-    for (var j = 0; j < that.width; ++j) {
+    for (var j = 0; j < that.columnCount; ++j) {
       var tile = new Tile();
       if (lastTileState.count >= 2){
         // Remove the state from the list of the allowed states
@@ -73,8 +74,8 @@ function Grid(delegate) {
     return row;
   };
   this.tileAt = function(x,y){
-    if (x >= this.width ||
-        y >= this.height ||
+    if (x >= this.columnCount ||
+        y >= this.rowCount ||
         x < 0 ||
         y < 0){
       throw 'out of bounds';
@@ -82,7 +83,7 @@ function Grid(delegate) {
     return _rows[y][x];
   };
   this.rowAt = function(y){
-    if (y >= this.height ||
+    if (y >= this.rowCount ||
         y < 0){
       throw 'out of bounds';
     }
@@ -90,7 +91,7 @@ function Grid(delegate) {
   };
   this.columnAt = function(x){
     var column = [];
-    for (var y = 0; y < this.height; ++y){
+    for (var y = 0; y < this.rowCount; ++y){
       column.push(this.tileAt(x, y));
     }
     return column;

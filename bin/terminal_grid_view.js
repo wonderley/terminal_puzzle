@@ -62,8 +62,8 @@ function TerminalGridView(gridMC){
     
     // Append our box to the screen.
     _screen.append(inner);
-    var rowNum = _gridMC.height;
-    var colNum = _gridMC.width;
+    var rowNum = _gridMC.rowCount;
+    var colNum = _gridMC.columnCount;
     for (var i = 0; i < rowNum; ++i) {
       var y = heightBetweenTiles + i * (tileHeight + heightBetweenTiles);
       var tiles = [];
@@ -101,8 +101,8 @@ function TerminalGridView(gridMC){
     this.updateView();
   };
   this.updateView = function(){
-    for (var x = 0; x < _gridMC.width; ++x){
-      for (var y = 0; y < _gridMC.height; ++y){
+    for (var x = 0; x < _gridMC.columnCount; ++x){
+      for (var y = 0; y < _gridMC.rowCount; ++y){
         var tile = _gridMC.tileAt(x,y);
         var tileView = _rows[y][x];
         var color = colorForTile(tile);

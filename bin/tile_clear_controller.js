@@ -46,10 +46,10 @@ function TileClearController(grid){
       }
     }
     // Iterate over each row and each column
-    for (var y = 0; y < _grid.height; ++y){
+    for (var y = 0; y < _grid.rowCount; ++y){
       _grid.rowAt(y).forEach(markConsecutiveTilesInArray);
     }
-    for (var x = 0; x < _grid.width; ++x){
+    for (var x = 0; x < _grid.columnCount; ++x){
       _grid.columnAt(x).forEach(markConsecutiveTilesInArray);
     }
     return somethingWasMarked;
@@ -61,7 +61,7 @@ function TileClearController(grid){
         tile.markedToClear = false;
       }
     }
-    for (var y = 0; y < _grid.height; ++y){
+    for (var y = 0; y < _grid.rowCount; ++y){
       _grid.rowAt(y).forEach(clearTileIfMarked);
     }
   };

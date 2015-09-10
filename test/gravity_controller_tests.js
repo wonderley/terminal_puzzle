@@ -62,13 +62,13 @@ describe('GravityController applyGravity', function(){
     tile3.state = gridModule.TileState.C;
     tile4.state = gridModule.TileState.D;
     controller.applyGravity();
-    assert(grid.tileAt(2, grid.height - 1) === tile1);
+    assert(grid.tileAt(2, grid.rowCount - 1) === tile1);
     assert(grid.tileAt(2, 2).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(3, grid.height - 1) === tile2);
+    assert(grid.tileAt(3, grid.rowCount - 1) === tile2);
     assert(grid.tileAt(3, 3).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(4, grid.height - 1) === tile3);
+    assert(grid.tileAt(4, grid.rowCount - 1) === tile3);
     assert(grid.tileAt(4, 4).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(5, grid.height - 1) === tile4);
+    assert(grid.tileAt(5, grid.rowCount - 1) === tile4);
     assert(grid.tileAt(5, 5).state === gridModule.TileState.EMPTY);
   });
   it('drops tiles in same column to the bottom', function(){
@@ -80,9 +80,9 @@ describe('GravityController applyGravity', function(){
     tile1.state = gridModule.TileState.A;
     tile2.state = gridModule.TileState.B;
     controller.applyGravity();
-    assert(grid.tileAt(2, grid.height - 2) === tile1);
+    assert(grid.tileAt(2, grid.rowCount - 2) === tile1);
     assert(grid.tileAt(2, 2).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(2, grid.height - 1) === tile2);
+    assert(grid.tileAt(2, grid.rowCount - 1) === tile2);
     assert(grid.tileAt(2, 3).state === gridModule.TileState.EMPTY);
   });
   it('drops tiles in same column with space between them to the bottom', function(){
@@ -94,9 +94,9 @@ describe('GravityController applyGravity', function(){
     tile1.state = gridModule.TileState.C;
     tile2.state = gridModule.TileState.D;
     controller.applyGravity();
-    assert(grid.tileAt(4, grid.height - 2) === tile1);
+    assert(grid.tileAt(4, grid.rowCount - 2) === tile1);
     assert(grid.tileAt(4, 3).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(4, grid.height - 1) === tile2);
+    assert(grid.tileAt(4, grid.rowCount - 1) === tile2);
     assert(grid.tileAt(4, 6).state === gridModule.TileState.EMPTY);
   });
 });

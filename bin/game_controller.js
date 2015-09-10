@@ -57,7 +57,7 @@ function GameController(){
   // public
   this.startGame = function(){
     _view.initializeView();
-    _cursor.setPosition(_grid.width / 2, _grid.height / 2);
+    _cursor.setPosition(_grid.columnCount / 2, _grid.rowCount / 2);
     advanceGameIntervalId = setInterval(advanceGame, _gameAdvanceIntervalInMillis);
   };
 }

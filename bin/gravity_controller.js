@@ -20,7 +20,7 @@ function GravityController(grid, view){
   var _view = view;
   var dropTileAt = function(x, y){
     var theTile = _grid.tileAt(x, y);
-    for (var currentY = y; currentY < _grid.height - 1; ++currentY){
+    for (var currentY = y; currentY < _grid.rowCount - 1; ++currentY){
       var tileBelow = _grid.tileAt(x, currentY + 1);
       if (tileBelow.state !== Grid.TileState.EMPTY){
         break;
@@ -33,9 +33,9 @@ function GravityController(grid, view){
    */
   this.applyGravity = function(){
     // Start from the second row.
-    for (var y = _grid.height - 2; y >= 0; --y){
+    for (var y = _grid.rowCount - 2; y >= 0; --y){
       var row = _grid.rowAt(y);
-      for (var x = 0; x < _grid.width; ++x){
+      for (var x = 0; x < _grid.columnCount; ++x){
         if (_grid.tileAt(x, y).state !== Grid.TileState.EMPTY){
           dropTileAt(x, y);
         }
