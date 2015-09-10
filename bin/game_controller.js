@@ -47,10 +47,7 @@ function GameController(){
   var _tileClearController = new TileClearController.TileClearController(_grid);
   var _gameAdvanceIntervalInMillis = 3000;
   var advanceGame = function(){
-    _grid.advanceRows();
-    if (_cursor.getY() > 0){
-      _cursor.setPosition(_cursor.getX(), _cursor.getY() - 1);
-    }
+    _grid.advanceRowsSmall();
   };
   var advanceGameIntervalId = null;
 

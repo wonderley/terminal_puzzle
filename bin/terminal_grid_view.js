@@ -8,8 +8,10 @@ var InputDelegate = require('./input_delegate.js');
 "use strict";
 
 var tileWidth = 4;
-var tileHeight = 2;
+var tileHeight = 3;
 var widthBetweenTiles = 2;
+// note - heightBetweenTiles and tileHeight should add to
+// Grid subrowsPerRow - 1.
 var heightBetweenTiles = 1;  
 function TerminalGridView(gridMC){
   if (!Grid.isValidGrid(gridMC)){
@@ -47,6 +49,7 @@ function TerminalGridView(gridMC){
       }
     });
   };
+  this.currentSubrow = 0;
   this.initializeView = function(){
     _screen = blessed.screen();
     
@@ -101,14 +104,18 @@ function TerminalGridView(gridMC){
     this.updateView();
   };
   this.updateView = function(){
+    var subrowAdjustment = this.currentSubrow - _gridMC.currentSubrow;
+    this.currentSubrow = _gridMC.currentSubrow;
     for (var x = 0; x < _gridMC.columnCount; ++x){
       for (var y = 0; y < _gridMC.rowCount; ++y){
         var tile = _gridMC.tileAt(x,y);
         var tileView = _rows[y][x];
         var color = colorForTile(tile);
         tileView.style.bg = color;
+        tileView.position.top += subrowAdjustment;
       }
     }
+    _cursorBox.position.top += subrowAdjustment;
     // Render the screen.
     _screen.render();
   };

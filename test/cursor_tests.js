@@ -61,9 +61,25 @@ describe('Cursor isValidCursorPosition', function(){
     var view = new terminalGridModule.TerminalGridView(grid);
     var cursor = new cursorModule.Cursor(grid, view);
     for (var x = 0; x < grid.columnCount - 1; ++x){
-      for (var y = 0; y < grid.rowCount; ++y){
+      for (var y = 0; y < grid.rowCount - 1; ++y){
         assert(cursor.isValidCursorPosition(x,y) === true);
       }
+    }
+  });
+  it('returns false if the position is on the bottom row', function(){
+    var grid = new gridModule.Grid();
+    var view = new terminalGridModule.TerminalGridView(grid);
+    var cursor = new cursorModule.Cursor(grid, view);
+    for (var x = 0; x < grid.columnCount - 1; ++x){
+      assert(cursor.isValidCursorPosition(x, grid.rowCount - 1) === false);
+    }
+  });
+  it('returns false if the position is on the rightmost column', function(){
+    var grid = new gridModule.Grid();
+    var view = new terminalGridModule.TerminalGridView(grid);
+    var cursor = new cursorModule.Cursor(grid, view);
+    for (var y = 0; y < grid.rowCount - 1; ++y){
+      assert(cursor.isValidCursorPosition(grid.columnCount - 1, y) === false);
     }
   });
 });

@@ -42,7 +42,8 @@ function Grid(delegate) {
   
   // public
   this.delegate = delegate;
-  this.subrowsPerRow = 3;
+  this.subrowsPerRow = 4;
+  this.currentSubrow = 0;
   this.rowCount = 12;
   this.columnCount = 6;
   this.generateRandomRow = function(columnCount){
@@ -101,6 +102,18 @@ function Grid(delegate) {
     _rows[y1][x1] = _rows[y2][x2];
     _rows[y2][x2] = tile1;
   };
+  this.advanceRowsSmall = function() {
+    this.currentSubrow = (this.currentSubrow + 1) % this.subrowsPerRow;
+    if (this.currentSubrow > 0) { 
+      if (delegate){
+        delegate.onGridChanged();
+      }
+      return;
+    }
+    else {
+      this.advanceRows();
+    }
+  };
   /**
    * Bring the rows upwards by one and add a new row
    * of occupied tiles to the bottom.
@@ -117,6 +130,7 @@ function Grid(delegate) {
     }
     removeRow();
   };
+
   var that = this; 
   populate();
 }
