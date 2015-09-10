@@ -6,7 +6,11 @@ var InputDelegate = require('./input_delegate.js');
 (function(){
 
 "use strict";
-  
+
+var tileWidth = 4;
+var tileHeight = 2;
+var widthBetweenTiles = 2;
+var heightBetweenTiles = 1;  
 function TerminalGridView(gridMC){
   if (!Grid.isValidGrid(gridMC)){
     throw 'Not a valid Grid.';
@@ -15,6 +19,8 @@ function TerminalGridView(gridMC){
   // Create a screen object.
   var _screen = null;
   var _rows = [];
+  // The UI elements that collectively make up the cursor
+  var _cursorBox = null;
   var _inputDelegate = null;
   var colorForTile = function(tile){
     if (tile.markedToClear){
@@ -43,74 +49,53 @@ function TerminalGridView(gridMC){
   };
   this.initializeView = function(){
     _screen = blessed.screen();
-    // Create a box perfectly centered horizontally and vertically.
-    var outer = blessed.box({  
-      fg: 'blue',
-      bg: 'default',
-      border: {
-        type: 'line',
-        fg: '#ffffff'
-      },
-      tags: true,
-      width: '95%',
-      height: '95%',
-      top: 'center',
-      left: 'center'
-    });
-    // Append our box to the screen.
-    _screen.append(outer);
     
-    // Create a child box perfectly centered horizontally and vertically.
     var inner = blessed.box({  
-      parent: outer,
       top: 'top',
       left: 'left',
       width: '70%',
       height: '100%',
-      border: {
-        type: 'line',
-        fg: '#ffffff'
-      },
       fg: 'blue',
       bg: 'default',
       tags: true
     });
     
+    // Append our box to the screen.
+    _screen.append(inner);
     var rowNum = _gridMC.height;
-    var rowHeightPercent = 100.0 / rowNum;
     var colNum = _gridMC.width;
-    var colWidthPercent = 100.0 / colNum;
     for (var i = 0; i < rowNum; ++i) {
-      var y = (i * rowHeightPercent) + '%';
-      var row = blessed.box({
-        top: y,
-        left: 'left',
-        width: '100%',
-        height: rowHeightPercent + '%',
-          border: {
-            fg: '#ffffff',
-          },
-      });
+      var y = heightBetweenTiles + i * (tileHeight + heightBetweenTiles);
       var tiles = [];
       for (var j = 0; j < colNum; ++j){
-        var x = (j * colWidthPercent) + '%';
+        var x = widthBetweenTiles + j * (tileWidth + widthBetweenTiles);
         var tile = blessed.box({
-          top: 'top',
+          top: y,
           left: x,
-          width: colWidthPercent + '%',
-          height: '100%',
-          border: {
-            fg: '#ffffff',
-          },
+          width: tileWidth,
+          height: tileHeight,
           fg: 'white',
           bg: 'green'
         });
         tiles.push(tile);
-        row.append(tile);
+        inner.append(tile);
       }
       _rows.push(tiles);
-      inner.append(row);
     }
+    _screen.render();
+    var yloc = 4 * (tileHeight + heightBetweenTiles);
+    var tiles = [];
+    var xloc = 4 * (tileWidth + widthBetweenTiles);
+    _cursorBox = blessed.box({
+      top: yloc,
+      left: xloc,
+      width: tileWidth * 2 + widthBetweenTiles * 3,
+      height: tileHeight + 2 * heightBetweenTiles,
+      fg: 'white',
+      bg: 'white'
+    });
+    inner.append(_cursorBox);
+    _cursorBox.setBack();
     registerKeys();
     _gridMC.advanceRows();
     this.updateView();
@@ -128,22 +113,15 @@ function TerminalGridView(gridMC){
     _screen.render();
   };
   this.drawCursorAt = function(x,y){
-    var tileView = _rows[y][x];
-    var tileView2 = _rows[y][x+1];
-    tileView.border = {
-      fg: 'black',
-      type: 'line'
-    };
-    tileView2.border = tileView.border;
+    var xloc = x * (tileWidth + widthBetweenTiles);
+    var yloc = y * (tileHeight + heightBetweenTiles);
+    _cursorBox.position.top = yloc;
+    _cursorBox.position.left = xloc;
     _screen.render();
   };
   this.clearCursorAt = function(x,y){
     var tileView = _rows[y][x];
     var tileView2 = _rows[y][x+1];
-    tileView.border = {
-      fg: '#ffffff'
-    };
-    tileView2.border = tileView.border;
   };
   this.setInputDelegate = function(inputDelegate){
     if (!InputDelegate.isInputDelegate(inputDelegate)){
