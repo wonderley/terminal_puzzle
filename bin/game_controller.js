@@ -48,6 +48,13 @@ function GameController(){
   var _gameAdvanceIntervalInMillis = 3000;
   var advanceGame = function(){
     _grid.advanceRowsSmall();
+    if (_grid.currentSubrow === 0) {
+      // Assume that the rows have just advanced to the next row.
+      // Move the cursor to the next row.
+     if (_cursor.getY() > 0){
+       _cursor.setPosition(_cursor.getX(), _cursor.getY() - 1);
+     }
+    }
   };
   var advanceGameIntervalId = null;
 

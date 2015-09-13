@@ -24,21 +24,22 @@ function TerminalGridView(gridMC){
   // The UI elements that collectively make up the cursor
   var _cursorBox = null;
   var _inputDelegate = null;
-  var colorForTile = function(tile){
+  var colorForTile = function(tile, isBottomRow){
     if (tile.markedToClear){
       return 'black';
     }
+    var light = isBottomRow ? '' : 'light ';
     var tileState = tile.state;
     if (tileState === Grid.TileState.EMPTY){
       return 'default';
     } else if (tileState === Grid.TileState.A){
-      return 'green';
+      return light + 'green';
     } else if (tileState === Grid.TileState.B){
-      return 'red';
+      return light + 'blue';
     } else if (tileState === Grid.TileState.C){
-      return 'blue';
+      return light + 'magenta';
     } else if (tileState === Grid.TileState.D){
-      return '#f3f449';
+      return light + 'red';
     }
     throw 'Invalid TileState.';
   };
@@ -99,6 +100,15 @@ function TerminalGridView(gridMC){
     });
     inner.append(_cursorBox);
     _cursorBox.setBack();
+    var bottomRowBlocker = blessed.box({
+      top: (_gridMC.rowCount - 1) * tileHeight + _gridMC.rowCount * heightBetweenTiles,
+      left: 0,
+      width: _gridMC.columnCount * (tileWidth + widthBetweenTiles),
+      height: tileHeight,
+      fg: 'default',
+      bg: 'default'
+    });
+    inner.append(bottomRowBlocker);
     registerKeys();
     _gridMC.advanceRows();
     this.updateView();
@@ -106,11 +116,12 @@ function TerminalGridView(gridMC){
   this.updateView = function(){
     var subrowAdjustment = this.currentSubrow - _gridMC.currentSubrow;
     this.currentSubrow = _gridMC.currentSubrow;
-    for (var x = 0; x < _gridMC.columnCount; ++x){
-      for (var y = 0; y < _gridMC.rowCount; ++y){
+    for (var y = 0; y < _gridMC.rowCount; ++y){
+      var isBottomRow = (y === _gridMC.rowCount - 1);
+      for (var x = 0; x < _gridMC.columnCount; ++x){
         var tile = _gridMC.tileAt(x,y);
         var tileView = _rows[y][x];
-        var color = colorForTile(tile);
+        var color = colorForTile(tile, isBottomRow);
         tileView.style.bg = color;
         tileView.position.top += subrowAdjustment;
       }
