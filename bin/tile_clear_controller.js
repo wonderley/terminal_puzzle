@@ -46,11 +46,12 @@ function TileClearController(grid){
       }
     }
     // Iterate over each row and each column
-    for (var y = 0; y < _grid.rowCount; ++y){
+    // Exclude the last row from both processes because it's not "in play".
+    for (var y = 0; y < _grid.rowCount - 1; ++y){
       _grid.rowAt(y).forEach(markConsecutiveTilesInArray);
     }
     for (var x = 0; x < _grid.columnCount; ++x){
-      _grid.columnAt(x).forEach(markConsecutiveTilesInArray);
+      _grid.columnAt(x).slice(0, _grid.rowCount - 1).forEach(markConsecutiveTilesInArray);
     }
     return somethingWasMarked;
   };

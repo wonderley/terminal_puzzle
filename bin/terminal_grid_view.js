@@ -121,7 +121,7 @@ function TerminalGridView(gridMC){
   };
   this.drawCursorAt = function(x,y){
     var xloc = x * (tileWidth + widthBetweenTiles);
-    var yloc = y * (tileHeight + heightBetweenTiles);
+    var yloc = y * (tileHeight + heightBetweenTiles) - this.currentSubrow;
     _cursorBox.position.top = yloc;
     _cursorBox.position.left = xloc;
     _screen.render();

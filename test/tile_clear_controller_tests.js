@@ -32,6 +32,19 @@ describe('TileClearController markTilesToClear', function(){
   it('marks three consecutive tiles in same row with same non-empty state', function(){
     var grid = new gridModule.Grid();
     var controller = new tileClearControllerModule.TileClearController(grid);
+    var someRow = grid.rowCount - 2;
+    var tile1 = grid.tileAt(2, someRow);
+    var tile2 = grid.tileAt(3, someRow);
+    var tile3 = grid.tileAt(4, someRow);
+    tile1.state = gridModule.TileState.A;
+    tile2.state = gridModule.TileState.A;
+    tile3.state = gridModule.TileState.A;
+    controller.markTilesToClear();
+    assert(tile1.markedToClear && tile2.markedToClear && tile3.markedToClear);
+  });
+  it('doesn\'t mark three consecutive tiles in bottom row with same non-empty state', function(){
+    var grid = new gridModule.Grid();
+    var controller = new tileClearControllerModule.TileClearController(grid);
     var bottomY = grid.rowCount - 1;
     var tile1 = grid.tileAt(2, bottomY);
     var tile2 = grid.tileAt(3, bottomY);
@@ -40,15 +53,15 @@ describe('TileClearController markTilesToClear', function(){
     tile2.state = gridModule.TileState.A;
     tile3.state = gridModule.TileState.A;
     controller.markTilesToClear();
-    assert(tile1.markedToClear && tile2.markedToClear && tile3.markedToClear);
+    assert(!tile1.markedToClear && !tile2.markedToClear && !tile3.markedToClear);
   });
   it('does not mark three consecutive tiles in same row with different non-empty state', function(){
     var grid = new gridModule.Grid();
     var controller = new tileClearControllerModule.TileClearController(grid);
-    var bottomY = grid.rowCount - 1;
-    var tile1 = grid.tileAt(2, bottomY);
-    var tile2 = grid.tileAt(3, bottomY);
-    var tile3 = grid.tileAt(4, bottomY);
+    var someRow = grid.rowCount - 2;
+    var tile1 = grid.tileAt(2, someRow);
+    var tile2 = grid.tileAt(3, someRow);
+    var tile3 = grid.tileAt(4, someRow);
     tile1.state = gridModule.TileState.A;
     tile2.state = gridModule.TileState.B;
     tile3.state = gridModule.TileState.A;
@@ -58,13 +71,13 @@ describe('TileClearController markTilesToClear', function(){
   it('marks all tiles if two sets of consecutive tiles are in the same row', function(){
     var grid = new gridModule.Grid();
     var controller = new tileClearControllerModule.TileClearController(grid);
-    var bottomY = grid.rowCount - 1;
-    var tile1 = grid.tileAt(0, bottomY);
-    var tile2 = grid.tileAt(1, bottomY);
-    var tile3 = grid.tileAt(2, bottomY);
-    var tile4 = grid.tileAt(3, bottomY);
-    var tile5 = grid.tileAt(4, bottomY);
-    var tile6 = grid.tileAt(5, bottomY);
+    var someRow = grid.rowCount - 2;
+    var tile1 = grid.tileAt(0, someRow);
+    var tile2 = grid.tileAt(1, someRow);
+    var tile3 = grid.tileAt(2, someRow);
+    var tile4 = grid.tileAt(3, someRow);
+    var tile5 = grid.tileAt(4, someRow);
+    var tile6 = grid.tileAt(5, someRow);
     tile1.state = gridModule.TileState.C;
     tile2.state = gridModule.TileState.C;
     tile3.state = gridModule.TileState.C;
@@ -150,11 +163,11 @@ describe('TileClearController markTilesToClear', function(){
   it('allows tiles to be shared vertically and horizontally', function(){
     var grid = new gridModule.Grid();
     var controller = new tileClearControllerModule.TileClearController(grid);
-    var tile1 = grid.tileAt(0, grid.rowCount - 1);
-    var tile2 = grid.tileAt(1, grid.rowCount - 1);
-    var tile3 = grid.tileAt(2, grid.rowCount - 1);
-    var tile4 = grid.tileAt(1, grid.rowCount - 2);
-    var tile5 = grid.tileAt(1, grid.rowCount - 3);
+    var tile1 = grid.tileAt(0, grid.rowCount - 2);
+    var tile2 = grid.tileAt(1, grid.rowCount - 2);
+    var tile3 = grid.tileAt(2, grid.rowCount - 2);
+    var tile4 = grid.tileAt(1, grid.rowCount - 3);
+    var tile5 = grid.tileAt(1, grid.rowCount - 4);
     tile1.state = gridModule.TileState.C;
     tile2.state = gridModule.TileState.C;
     tile3.state = gridModule.TileState.C;
@@ -170,10 +183,10 @@ describe('TileClearController markTilesToClear', function(){
   it('returns true if any tiles are marked to clear', function(){
     var grid = new gridModule.Grid();
     var controller = new tileClearControllerModule.TileClearController(grid);
-    var bottomY = grid.rowCount - 1;
-    var tile1 = grid.tileAt(2, bottomY);
-    var tile2 = grid.tileAt(3, bottomY);
-    var tile3 = grid.tileAt(4, bottomY);
+    var someRow = grid.rowCount - 2;
+    var tile1 = grid.tileAt(2, someRow);
+    var tile2 = grid.tileAt(3, someRow);
+    var tile3 = grid.tileAt(4, someRow);
     tile1.state = gridModule.TileState.A;
     tile2.state = gridModule.TileState.A;
     tile3.state = gridModule.TileState.A;
