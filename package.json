@@ -8,5 +8,8 @@
   },
   "dependencies": {
     "blessed": ">= 0.0.37"
+  },
+  "devDependencies": {
+    "mocha": "*"
   }
 }  
