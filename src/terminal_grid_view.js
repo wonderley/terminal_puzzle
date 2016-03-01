@@ -66,12 +66,12 @@ function TerminalGridView(gridMC){
     
     // Append our box to the screen.
     _screen.append(inner);
-    var rowNum = _gridMC.rowCount;
-    var colNum = _gridMC.columnCount;
-    for (var i = 0; i < rowNum; ++i) {
+    var rowCount = _gridMC.rowCount;
+    var colCount = _gridMC.columnCount;
+    for (var i = 0; i < rowCount; ++i) {
       var y = heightBetweenTiles + i * (tileHeight + heightBetweenTiles);
       var tiles = [];
-      for (var j = 0; j < colNum; ++j){
+      for (var j = 0; j < colCount; ++j){
         var x = widthBetweenTiles + j * (tileWidth + widthBetweenTiles);
         var tile = blessed.box({
           top: y,
@@ -86,6 +86,25 @@ function TerminalGridView(gridMC){
       }
       _rows.push(tiles);
     }
+    // Add the line above the bottom row.
+    var bottomRowMarkerLeft = blessed.box({
+      top: (rowCount - 1) * (tileHeight + heightBetweenTiles),
+      left: 0,
+      width: 1,
+      height: 1,
+      fg: 'white',
+      bg: 'white'
+    });
+    var bottomRowMarkerRight = blessed.box({
+      top: (rowCount - 1) * (tileHeight + heightBetweenTiles),
+      left: 1 + colCount * (tileWidth + widthBetweenTiles),
+      width: 1,
+      height: 1,
+      fg: 'white',
+      bg: 'white'
+    });
+    inner.append(bottomRowMarkerLeft);
+    inner.append(bottomRowMarkerRight);
     _screen.render();
     var yloc = 4 * (tileHeight + heightBetweenTiles);
     var tiles = [];
