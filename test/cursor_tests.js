@@ -2,10 +2,10 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var gridModule = require('../bin/grid.js');
-var terminalGridModule = require('../bin/terminal_grid_view.js');
-var gameControllerModule = require('../bin/game_controller.js');
-var cursorModule = require('../bin/cursor.js');
+var gridModule = require('../src/grid.js');
+var terminalGridModule = require('../src/terminal_grid_view.js');
+var gameControllerModule = require('../src/game_controller.js');
+var cursorModule = require('../src/cursor.js');
 
 describe('Cursor', function(){
   it('can be created', function(){

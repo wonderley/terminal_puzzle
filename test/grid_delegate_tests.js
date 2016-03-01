@@ -2,7 +2,7 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var gridDelegate = require('../bin/grid_delegate.js');
+var gridDelegate = require('../src/grid_delegate.js');
 
 describe('A GridDelegate', function(){
   it('must implement the onGridChanged function and onGameOver function', function(){

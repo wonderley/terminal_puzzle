@@ -1,0 +1,6 @@
+#! /usr/bin/env node
+var GameController = require('../src/game_controller.js');
+if (require.main === module) {
+  var controller = new GameController();
+  controller.startGame();
+}

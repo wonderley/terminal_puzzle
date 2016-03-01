@@ -66,13 +66,6 @@ function GameController(){
   };
 }
   
-if (require.main === module) {
-  var controller = new GameController();
-  controller.startGame();
-}
-  
-module.exports = {
-  GameController: GameController
-};
+module.exports = GameController;
 
 })();

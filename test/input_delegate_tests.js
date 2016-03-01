@@ -2,7 +2,7 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var inputDelegate = require('../bin/input_delegate.js');
+var inputDelegate = require('../src/input_delegate.js');
 
 describe('An InputDelegate', function(){
   it('is something that implements the onUserInput function and has the isLocked flag', function(){

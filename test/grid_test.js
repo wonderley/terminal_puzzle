@@ -1,8 +1,8 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var gridModule = require('../bin/grid.js');
-var gridDelegateModule = require('../bin/grid_delegate.js');
+var gridModule = require('../src/grid.js');
+var gridDelegateModule = require('../src/grid_delegate.js');
 var my_grid = new gridModule.Grid();
 
 describe('grid', function(){

@@ -2,9 +2,9 @@
 /* Run with mocha */
 /* global require, describe, it */
 var assert = require('assert');
-var gravityControllerModule = require('../bin/gravity_controller.js');
-var terminalGridModule = require('../bin/terminal_grid_view.js');
-var gridModule = require('../bin/grid.js');
+var gravityControllerModule = require('../src/gravity_controller.js');
+var terminalGridModule = require('../src/terminal_grid_view.js');
+var gridModule = require('../src/grid.js');
 
 describe('GravityController', function(){
   it('can be created', function(){
