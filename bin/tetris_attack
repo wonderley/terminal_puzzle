@@ -1,6 +1,21 @@
 #! /usr/bin/env node
 var GameController = require('../src/game_controller.js');
 if (require.main === module) {
-  var controller = new GameController();
-  controller.startGame();
+  var Grid = require('../src/grid.js');
+  var TerminalGridView = require('../src/terminal_grid_view.js');
+  var Cursor = require('../src/cursor.js');
+  var TerminalInputController = require('../src/terminal_input_controller.js');
+  var GravityController = require('../src/gravity_controller.js');
+  var TileClearController = require('../src/tile_clear_controller.js');
+  
+  GameController.grid = new Grid.Grid();
+  GameController.view = new TerminalGridView.TerminalGridView(GameController.grid);
+  GameController.cursor = new Cursor.Cursor(GameController.grid, GameController.view);
+  GameController.inputController = new TerminalInputController.TerminalInputController(GameController.cursor);
+  GameController.view.setInputDelegate(GameController.inputController);
+  GameController.gravityController = new GravityController.GravityController(GameController.grid, GameController.view);
+  GameController.tileClearController = new TileClearController.TileClearController(GameController.grid);
+  GameController.gameAdvanceIntervalInMillis = 3000;
+  GameController.advanceGameIntervalId = null;
+  GameController.startGame();
 }

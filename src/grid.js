@@ -1,16 +1,11 @@
 #! /usr/bin/env node
-var GridDelegate = require('./grid_delegate.js');
+var Game = require('./game_controller.js');
 
 (function(){
 
 "use strict";
 
-function Grid(delegate) {
-  if (delegate !== null &&
-      delegate !== undefined &&
-      !GridDelegate.isGridDelegate(delegate)){
-    throw 'Invalid GridDelegate passed to Grid constructor';
-  }
+function Grid() {
   // private
   var _rows = [];
   var populate = function(){
@@ -29,19 +24,14 @@ function Grid(delegate) {
   var addPopulatedRow = function(){
     var row = that.generateRandomRow();
     _rows.push(row);
-    if (delegate){
-      delegate.onGridChanged();
-    }
+    Game.onGridChanged();
   };
   var removeRow = function(){
     _rows.shift();
-    if (delegate){
-      delegate.onGridChanged();
-    }
+    Game.onGridChanged();
   };
   
   // public
-  this.delegate = delegate;
   this.subrowsPerRow = 4;
   this.currentSubrow = 0;
   this.rowCount = 12;
@@ -105,9 +95,7 @@ function Grid(delegate) {
   this.advanceRowsSmall = function() {
     this.currentSubrow = (this.currentSubrow + 1) % this.subrowsPerRow;
     if (this.currentSubrow > 0) { 
-      if (delegate){
-        delegate.onGridChanged();
-      }
+      Game.onGridChanged();
       return;
     }
     else {
@@ -124,7 +112,7 @@ function Grid(delegate) {
     for (var i = 0; i < topRow.length; ++i){
       var topTile = topRow[i];
       if(topTile.state !== TileState.EMPTY){
-        that.delegate.onGameOver();
+        Game.onGameOver();
         return;
       }
     }

@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 var Grid = require('./grid.js');
+var GameController = require('./game_controller.js');
 var TerminalGridView = require('./terminal_grid_view.js');
 
 (function(){
@@ -41,7 +42,7 @@ function Cursor(grid, view){
       view.clearCursorAt(_x, _y);
     }
     _x = x;
-    _y = y;
+    _y = Math.ceil(y, 0);
     view.drawCursorAt(_x, _y);
   };
   this.goUp = function(){
@@ -74,9 +75,7 @@ function Cursor(grid, view){
   };
   this.swapTiles = function(){
     _grid.swapTilesAt(_x, _y, _x + 1, _y);
-    if (_grid.delegate){
-      _grid.delegate.onGridChanged();
-    }
+    GameController.onGridChanged();
   };
 }
   

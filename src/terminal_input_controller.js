@@ -38,10 +38,10 @@ function TerminalInputController(cursor){
     if (key === 'space'){
       _cursor.swapTiles();
     }
+    if (key === 'a'){
+      _cursor.swapTiles();
+    }
   };
-}
-
-if (require.main === module) {
 }
   
 module.exports = {

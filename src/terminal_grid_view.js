@@ -57,15 +57,25 @@ function TerminalGridView(gridMC){
     var inner = blessed.box({  
       top: 'top',
       left: 'left',
-      width: '70%',
-      height: '100%',
+      width: colCount * (tileWidth + widthBetweenTiles) + 4,
+      height: (rowCount + 1) * (tileHeight + heightBetweenTiles),
       fg: 'blue',
       bg: 'default',
       tags: true
     });
+    var scoreText = blessed.text({  
+      top: '20%',
+      left: '50%',
+      width: '30%',
+      height: 2,
+      fg: 'blue',
+      bg: 'default',
+      content: 'hello'
+    });
     
     // Append our box to the screen.
     _screen.append(inner);
+    _screen.append(scoreText);
     var rowCount = _gridMC.rowCount;
     var colCount = _gridMC.columnCount;
     for (var i = 0; i < rowCount; ++i) {

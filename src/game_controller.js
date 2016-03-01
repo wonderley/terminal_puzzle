@@ -1,71 +1,60 @@
 #! /usr/bin/env node
-var Grid = require('./grid.js');
-var TerminalGridView = require('./terminal_grid_view.js');
-var Cursor = require('./cursor.js');
-var TerminalInputController = require('./terminal_input_controller.js');
-var GravityController = require('./gravity_controller.js');
-var TileClearController = require('./tile_clear_controller.js');
 
 (function(){
 
 "use strict";
-  
-function GameController(){
+
+module.exports = {
   // public - GridDelegate methods
-  this.onGridChanged = function(){
-    _view.updateView();
+  onGridChanged: function(){
+    this.view.updateView();
+    var that = this;
     setTimeout(function(){
-      _gravityController.applyGravity();
-      _view.updateView();
-      evaluateGrid();
+      that.gravityController.applyGravity();
+      that.view.updateView();
+      that.evaluateGrid();
     }, 200);
-  };
-  this.onGameOver = function(){
-    clearInterval(advanceGameIntervalId);
-    advanceGameIntervalId = setInterval(advanceGame, _gameAdvanceIntervalInMillis);
-  };
-  var that = this;
-  var evaluateGrid = function(){
-    if (!_tileClearController.markTilesToClear()){
+  },
+  onGameOver: function(){
+    clearInterval(this.advanceGameIntervalId);
+    this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
+  },
+  evaluateGrid: function(){
+    if (!this.tileClearController.markTilesToClear()){
       return;
     }
-    _view.updateView();
+    this.view.updateView();
+    var that = this;
     setTimeout(function(){
-      _tileClearController.clearMarkedTiles();
-      _view.updateView();
+      that.tileClearController.clearMarkedTiles();
+      that.view.updateView();
       setTimeout(function(){
         that.onGridChanged();
       }, 100);
     }, 500);
-  };
-  var _grid = new Grid.Grid(this);
-  var _view = new TerminalGridView.TerminalGridView(_grid);
-  var _cursor = new Cursor.Cursor(_grid, _view);
-  var _inputController = new TerminalInputController.TerminalInputController(_cursor);
-  _view.setInputDelegate(_inputController);
-  var _gravityController = new GravityController.GravityController(_grid, _view);
-  var _tileClearController = new TileClearController.TileClearController(_grid);
-  var _gameAdvanceIntervalInMillis = 3000;
-  var advanceGame = function(){
-    _grid.advanceRowsSmall();
-    if (_grid.currentSubrow === 0) {
+  },
+  startGame: function(){
+    this.view.initializeView();
+    this.cursor.setPosition(this.grid.columnCount / 2, this.grid.rowCount / 2);
+    this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
+  },
+  advanceGame: function(){
+    this.grid.advanceRowsSmall();
+    if (this.grid.currentSubrow === 0) {
       // Assume that the rows have just advanced to the next row.
       // Move the cursor to the next row.
-     if (_cursor.getY() > 0){
-       _cursor.setPosition(_cursor.getX(), _cursor.getY() - 1);
-     }
+      if (this.cursor.getY() > 0){
+        this.cursor.setPosition(this.cursor.getX(), this.cursor.getY() - 1);
+      }
     }
-  };
-  var advanceGameIntervalId = null;
-
-  // public
-  this.startGame = function(){
-    _view.initializeView();
-    _cursor.setPosition(_grid.columnCount / 2, _grid.rowCount / 2);
-    advanceGameIntervalId = setInterval(advanceGame, _gameAdvanceIntervalInMillis);
-  };
-}
-  
-module.exports = GameController;
-
+  },
+  grid: null,
+  view: null,
+  cursor: null,
+  inputController: null,
+  gravityController: null,
+  tileClearController: null,
+  gameAdvanceIntervalInMillis: 3000,
+  advanceGameIntervalId: null,
+};
 })();

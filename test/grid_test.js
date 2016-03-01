@@ -2,8 +2,8 @@
 /* global require, describe, it */
 var assert = require('assert');
 var gridModule = require('../src/grid.js');
-var gridDelegateModule = require('../src/grid_delegate.js');
 var my_grid = new gridModule.Grid();
+var GameController = require('../src/game_controller.js');
 
 describe('grid', function(){
   it('should have height and width', function(){
@@ -112,34 +112,6 @@ describe('grid', function(){
         assert(tile.id === sameTileInNewPosition.id);
       });
     });
-  });
-  it('accepts a GridDelegate as the first argument to its constructor', function(){
-    var delegate = {};
-    var tmp = gridDelegateModule.isGridDelegate;
-    var grid;
-    var threw = false;
-    try{
-      gridDelegateModule.isGridDelegate = function(){ return true; };
-      grid = new gridModule.Grid(delegate);
-    } catch (e) {
-      threw = true;
-    } finally {
-      assert(!threw);
-      assert(grid.delegate === delegate);
-      gridDelegateModule.isGridDelegate = tmp;
-    }
-  });
-  it('throws if an invalid GridDelegate is passed', function(){
-    var delegate = {};
-    var grid;
-    var threw = false;
-    try{
-      grid = new gridModule.Grid(delegate);
-    } catch (e) {
-      threw = true;
-    } finally {
-      assert(threw);
-    }
   });
 });
 
@@ -378,16 +350,20 @@ describe('Grid advanceRows', function(){
   it('calls onGameOver on delegate if it is called when tiles are at the top', function(){
     var grid = new gridModule.Grid();
     var onGameOverCalls = 0;
-    grid.delegate = {
-      onGameOver: function(){
+    var realOnGameOver = GameController.onGameOver;
+    try {
+      GameController.onGameOver = function(){
         onGameOverCalls += 1;
+      };
+      for (var i = 0; i < grid.rowCount; ++i){
+        grid.advanceRows();
+        assert(onGameOverCalls === 0);
       }
-    };
-    for (var i = 0; i < grid.rowCount; ++i){
       grid.advanceRows();
-      assert(onGameOverCalls === 0);
+      assert(onGameOverCalls === 1);
     }
-    grid.advanceRows();
-    assert(onGameOverCalls === 1);
+    finally {
+      GameController.onGameOver = realOnGameOver;
+    }
   });
 });

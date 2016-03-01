@@ -4,7 +4,7 @@
 var assert = require('assert');
 var gridModule = require('../src/grid.js');
 var terminalGridModule = require('../src/terminal_grid_view.js');
-var gameControllerModule = require('../src/game_controller.js');
+var GameController = require('../src/game_controller.js');
 var cursorModule = require('../src/cursor.js');
 
 describe('Cursor', function(){
@@ -394,6 +394,7 @@ describe('Cursor swapTiles', function(){
     view.clearCursorAt = function(){};
     view.drawCursorAt = function(){};
     view.updateView = function(){};
+    GameController.view = view;
     var cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
     cursor.swapTiles();
@@ -409,14 +410,20 @@ describe('Cursor swapTiles', function(){
     view.clearCursorAt = function(){};
     view.drawCursorAt = function(){};
     var onGridChangedCalled = false;
-    grid.delegate.onGridChanged = function(){
-     onGridChangedCalled = true;
-    };
-    view.updateView = function(){
-    };
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.setPosition(1,1);
-    cursor.swapTiles();
-    assert(onGridChangedCalled);
+    var realOnGridChanged = GameController.onGridChanged;
+    try {
+      GameController.onGridChanged = function(){
+        onGridChangedCalled = true;
+      };
+      view.updateView = function(){
+      };
+      var cursor = new cursorModule.Cursor(grid, view);
+      cursor.setPosition(1,1);
+      cursor.swapTiles();
+      assert(onGridChangedCalled);
+    }
+    finally {
+      GameController.onGridChanged = realOnGridChanged;
+    }
   });
 });
