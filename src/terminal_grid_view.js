@@ -59,7 +59,7 @@ function TerminalGridView(gridMC){
       left: 'left',
       width: colCount * (tileWidth + widthBetweenTiles) + 4,
       height: (rowCount + 1) * (tileHeight + heightBetweenTiles),
-      fg: 'blue',
+      fg: 'default',
       bg: 'default',
       tags: true
     });

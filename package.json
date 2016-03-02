@@ -7,7 +7,7 @@
     "url": "https://github.com/wonderlr/tetris_attack"
   },
   "dependencies": {
-    "blessed": ">= 0.0.37"
+    "blessed": "0.0.37"
   },
   "devDependencies": {
     "mocha": "*"
