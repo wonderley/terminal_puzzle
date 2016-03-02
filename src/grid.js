@@ -24,11 +24,9 @@ function Grid() {
   var addPopulatedRow = function(){
     var row = that.generateRandomRow();
     _rows.push(row);
-    Game.onGridChanged();
   };
   var removeRow = function(){
     _rows.shift();
-    Game.onGridChanged();
   };
   
   // public
@@ -117,6 +115,7 @@ function Grid() {
       }
     }
     removeRow();
+    Game.onGridChanged();
   };
 
   var that = this; 

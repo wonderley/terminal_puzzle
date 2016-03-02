@@ -5,8 +5,7 @@
 "use strict";
   
 function isInputDelegate(obj){
-  return typeof obj.onUserInput === 'function' && 
-         typeof obj.isLocked === 'boolean';
+  return typeof obj.onUserInput === 'function';
 }
 
 module.exports = {

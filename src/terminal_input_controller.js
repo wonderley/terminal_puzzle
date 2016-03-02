@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 var Cursor = require('./cursor.js');
+var GameController = require('./game_controller.js');
 
 (function(){
 
@@ -10,11 +11,7 @@ function TerminalInputController(cursor){
     throw 'Invalid cursor';
   }
   var _cursor = cursor;
-  this.isLocked = false;
   this.onUserInput = function(input){
-    if (this.isLocked){
-      //return;
-    }
     if (!input || !input.full){
       return;
     }
@@ -39,7 +36,12 @@ function TerminalInputController(cursor){
       _cursor.swapTiles();
     }
     if (key === 'a'){
-      _cursor.swapTiles();
+      // Quickly advance the game four times.
+	  var advanceGameWithBoundThis = GameController.advanceGame.bind(GameController);
+      setTimeout(advanceGameWithBoundThis, 100);
+      setTimeout(advanceGameWithBoundThis, 200);
+      setTimeout(advanceGameWithBoundThis, 300);
+      setTimeout(advanceGameWithBoundThis, 400);
     }
   };
 }
