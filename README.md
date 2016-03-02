@@ -6,7 +6,7 @@ To run:
 
   npm install
 
-  bin/game_controller.js
+  bin/tetris_attack
 
 Use the arrow keys or the h, j, k and l keys to move the cursor.
 
