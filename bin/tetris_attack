@@ -1,21 +1,21 @@
 #! /usr/bin/env node
-var GameController = require('../src/game_controller.js');
+var GameController = require('../src/game_controller.js').GameController;
 if (require.main === module) {
-  var Grid = require('../src/grid.js');
-  var TerminalGridView = require('../src/terminal_grid_view.js');
-  var Cursor = require('../src/cursor.js');
-  var TerminalInputController = require('../src/terminal_input_controller.js');
-  var GravityController = require('../src/gravity_controller.js');
-  var TileClearController = require('../src/tile_clear_controller.js');
-  
-  GameController.grid = new Grid.Grid();
-  GameController.view = new TerminalGridView.TerminalGridView(GameController.grid);
-  GameController.cursor = new Cursor.Cursor(GameController.grid, GameController.view);
-  GameController.inputController = new TerminalInputController.TerminalInputController(GameController.cursor);
-  GameController.view.setInputDelegate(GameController.inputController);
-  GameController.gravityController = new GravityController.GravityController(GameController.grid, GameController.view);
-  GameController.tileClearController = new TileClearController.TileClearController(GameController.grid);
-  GameController.gameAdvanceIntervalInMillis = 3000;
-  GameController.advanceGameIntervalId = null;
-  GameController.startGame();
+  var Grid = require('../src/grid.js').Grid;
+  var TerminalGridView = require('../src/terminal_grid_view.js').TerminalGridView;
+  var Cursor = require('../src/cursor.js').Cursor;
+  var TerminalInputController = require('../src/terminal_input_controller.js').TerminalInputController;
+  var GravityController = require('../src/gravity_controller.js').GravityController;
+  var TileClearController = require('../src/tile_clear_controller.js').TileClearController;
+  const game = GameController.instance;
+  game.grid = new Grid();
+  game.view = new TerminalGridView(game.grid);
+  game.cursor = new Cursor(game.grid, game.view);
+  game.inputController = new TerminalInputController(game.cursor);
+  game.view.setInputDelegate(game.inputController);
+  game.gravityController = new GravityController(game.grid, game.view);
+  game.tileClearController = new TileClearController(game.grid);
+  game.gameAdvanceIntervalInMillis = 3000;
+  game.advanceGameIntervalId = null;
+  game.startGame();
 }

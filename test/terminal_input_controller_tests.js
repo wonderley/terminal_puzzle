@@ -15,29 +15,4 @@ describe('TerminalInputController', function(){
     var cursor = new cursorModule.Cursor(grid, view);
     var controller = new inputControllerModule.TerminalInputController(cursor);
   });
-  it('throws if created with invalid cursor', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    var tmp = cursorModule.isValidCursor;
-    cursorModule.isValidCursor = function(){
-      return false;
-    };
-    var threw = false;
-    try{
-      var controller = new inputControllerModule.TerminalInputController(cursor);
-    }catch(e){
-      threw = true;
-    } finally {
-      cursorModule.isValidCursor = tmp;
-      assert(threw);
-    }
-  });
-  it('is an InputDelegate', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    var controller = new inputControllerModule.TerminalInputController(cursor);
-    assert(inputDelegateModule.isInputDelegate(controller) === true);
-  });
 });

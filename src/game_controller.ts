@@ -1,25 +1,40 @@
-#! /usr/bin/env node
+import { Grid } from './grid';
 
-(function(){
-
-"use strict";
-
-module.exports = {
-  // public - GridDelegate methods
-  onGridChanged: function(){
+export class GameController {
+  grid: Grid = null;
+  view: any = null;
+  cursor: any = null;
+  inputController: any = null;
+  gravityController: any = null;
+  tileClearController: any = null;
+  gameAdvanceIntervalInMillis: any = 3000;
+  advanceGameIntervalId: any = null;
+  private static _instance: GameController;
+  static get instance(): GameController {
+    if (!this._instance) {
+      this.instance = new GameController();
+    }
+    return this._instance;
+  }
+  static set instance(instance: GameController) {
+    this._instance = instance;
+  }
+  onGridChanged() {
     this.view.updateView();
-    var that = this;
-    setTimeout(function(){
+    var that: GameController = this;
+    setTimeout(function() {
       that.gravityController.applyGravity();
       that.view.updateView();
       that.evaluateGrid();
     }, 200);
-  },
-  onGameOver: function(){
+  }
+
+  onGameOver() {
     clearInterval(this.advanceGameIntervalId);
     this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
-  },
-  evaluateGrid: function(){
+  }
+
+  evaluateGrid() {
     if (!this.tileClearController.markTilesToClear()){
       return;
     }
@@ -32,29 +47,22 @@ module.exports = {
         that.onGridChanged();
       }, 100);
     }, 500);
-  },
-  startGame: function(){
+  }
+
+  startGame() {
     this.view.initializeView();
-    this.cursor.setPosition(this.grid.columnCount / 2, this.grid.rowCount / 2);
+    this.cursor.setPosition(Grid.columnCount / 2, Grid.rowCount / 2);
     this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
-  },
-  advanceGame: function(){
+  }
+
+  advanceGame() {
     this.grid.advanceRowsSmall();
     if (this.grid.currentSubrow === 0) {
       // Assume that the rows have just advanced to the next row.
       // Move the cursor to the next row.
-      if (this.cursor.getY() > 0){
+      if (this.cursor.getY() > 0) {
         this.cursor.setPosition(this.cursor.getX(), this.cursor.getY() - 1);
       }
     }
-  },
-  grid: null,
-  view: null,
-  cursor: null,
-  inputController: null,
-  gravityController: null,
-  tileClearController: null,
-  gameAdvanceIntervalInMillis: 3000,
-  advanceGameIntervalId: null,
-};
-})();
+  }
+}

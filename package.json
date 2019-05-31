@@ -10,6 +10,6 @@
     "blessed": "0.0.37"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "5.2.0"
   }
-}  
+}

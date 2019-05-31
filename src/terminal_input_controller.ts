@@ -1,18 +1,13 @@
 #! /usr/bin/env node
-var Cursor = require('./cursor.js');
-var GameController = require('./game_controller.js');
-
-(function(){
-
-"use strict";
+import { Cursor } from './cursor';
+import { GameController } from './game_controller';
+import { InputDelegate } from './input_delegate';
   
-function TerminalInputController(cursor){
-  if (!Cursor.isValidCursor(cursor)){
-    throw 'Invalid cursor';
+class TerminalInputController implements InputDelegate {
+  constructor(private _cursor: Cursor) {
   }
-  var _cursor = cursor;
-  this.onUserInput = function(input){
-    if (!input || !input.full){
+  onUserInput(input: { full: string }) {
+    if (!input || !input.full) {
       return;
     }
     var key = input.full;
@@ -21,23 +16,23 @@ function TerminalInputController(cursor){
       return process.exit(0);
     }
     if (key === 'up' || key === 'k'){
-      _cursor.goUp();
+      this._cursor.goUp();
     }
     if (key === 'down' || key === 'j'){
-      _cursor.goDown();
+      this._cursor.goDown();
     }
     if (key === 'left' || key === 'h'){
-      _cursor.goLeft();
+      this._cursor.goLeft();
     }
     if (key === 'right' || key === 'l'){
-      _cursor.goRight();
+      this._cursor.goRight();
     }
     if (key === 'space'){
-      _cursor.swapTiles();
+      this._cursor.swapTiles();
     }
     if (key === 'a'){
       // Quickly advance the game four times.
-	  var advanceGameWithBoundThis = GameController.advanceGame.bind(GameController);
+	    var advanceGameWithBoundThis = GameController.instance.advanceGame.bind(GameController);
       setTimeout(advanceGameWithBoundThis, 100);
       setTimeout(advanceGameWithBoundThis, 200);
       setTimeout(advanceGameWithBoundThis, 300);
@@ -49,5 +44,3 @@ function TerminalInputController(cursor){
 module.exports = {
   TerminalInputController: TerminalInputController
 };
-
-})();

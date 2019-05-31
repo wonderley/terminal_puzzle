@@ -4,7 +4,7 @@
 var assert = require('assert');
 var gridModule = require('../src/grid.js');
 var terminalGridModule = require('../src/terminal_grid_view.js');
-var GameController = require('../src/game_controller.js');
+var GameController = require('../src/game_controller.js').GameController;
 var cursorModule = require('../src/cursor.js');
 
 describe('Cursor', function(){
@@ -12,46 +12,6 @@ describe('Cursor', function(){
     var grid = new gridModule.Grid();
     var view = new terminalGridModule.TerminalGridView(grid);
     var cursor = new cursorModule.Cursor(grid, view);
-  });
-});
-
-describe('Cursor', function(){
-  it('throws if created with invalid grid', function(){
-    var grid = new gridModule.Grid();
-    var tmp = gridModule.isValidGrid;
-    var view = new terminalGridModule.TerminalGridView(grid);
-    gridModule.isValidGrid = function(){
-      return false;
-    };
-    var threw = false;
-    try{
-      var controller = new cursorModule.Cursor(grid, view);
-    }catch(e){
-      threw = true;
-    } finally {
-      gridModule.isValidGrid = tmp;
-      assert(threw);
-    }
-  });
-});
-
-describe('Cursor', function(){
-  it('throws if created with invalid view', function(){
-    var grid = new gridModule.Grid();
-    var tmp = terminalGridModule.isValidView;
-    var view = new terminalGridModule.TerminalGridView(grid);
-    terminalGridModule.isValidView = function(){
-      return false;
-    };
-    var threw = false;
-    try{
-      var controller = new cursorModule.Cursor(grid, view);
-    }catch(e){
-      threw = true;
-    } finally {
-      terminalGridModule.isValidView = tmp;
-      assert(threw);
-    }
   });
 });
 
@@ -125,23 +85,6 @@ describe('Cursor', function(){
     var cursor = new cursorModule.Cursor(grid, view);
     assert(cursor.getX() === -1);
     assert(cursor.getY() === -1);
-  });
-});
-
-describe('isValidCursor', function(){
-  it('fails if falsy value is passed', function(){
-    assert(cursorModule.isValidCursor() === false);
-    assert(cursorModule.isValidCursor(null) === false);
-    assert(cursorModule.isValidCursor(false) === false);
-  });
-});
-
-describe('isValidCursor', function(){
-  it('succeeds if a valid view and grid are passed', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    assert(cursorModule.isValidCursor(cursor) === true);
   });
 });
 
@@ -394,7 +337,7 @@ describe('Cursor swapTiles', function(){
     view.clearCursorAt = function(){};
     view.drawCursorAt = function(){};
     view.updateView = function(){};
-    GameController.view = view;
+    GameController.instance.view = view;
     var cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
     cursor.swapTiles();
@@ -403,16 +346,16 @@ describe('Cursor swapTiles', function(){
     assert(x2Param === 2);
     assert(y2Param === 1);
   });
-  it('Calls onGridChanged', function(){
+  it('Calls onGridChanged', function() {
     var grid = new gridModule.Grid();
     var view = new terminalGridModule.TerminalGridView(grid);
     grid.delegate = {};
     view.clearCursorAt = function(){};
     view.drawCursorAt = function(){};
     var onGridChangedCalled = false;
-    var realOnGridChanged = GameController.onGridChanged;
+    var realOnGridChanged = GameController.instance.onGridChanged;
     try {
-      GameController.onGridChanged = function(){
+      GameController.instance.onGridChanged = function(){
         onGridChangedCalled = true;
       };
       view.updateView = function(){
@@ -423,7 +366,7 @@ describe('Cursor swapTiles', function(){
       assert(onGridChangedCalled);
     }
     finally {
-      GameController.onGridChanged = realOnGridChanged;
+      GameController.instance.onGridChanged = realOnGridChanged;
     }
   });
 });

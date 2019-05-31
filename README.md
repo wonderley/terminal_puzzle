@@ -6,6 +6,8 @@ To run:
 
   npm install
 
+  npm install -g typescript
+
   bin/tetris_attack
 
 Use the arrow keys or the h, j, k and l keys to move the cursor.
