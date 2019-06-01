@@ -18,7 +18,7 @@ export class TerminalGridView {
   private _cursorBox: any = null;
   private _inputDelegate: any = null;
   currentSubrow: number = 0;
-  constructor(private readonly _gridMC: Grid) {
+  constructor(private readonly _grid: Grid) {
   }
 
   private colorForTile(tile: Tile, isBottomRow: boolean) {
@@ -138,16 +138,16 @@ export class TerminalGridView {
     });
     inner.append(bottomRowBlocker);
     this.registerKeys();
-    this._gridMC.advanceRows();
+    this._grid.advanceRows();
     this.updateView();
   };
   updateView() {
-    let subrowAdjustment = this.currentSubrow - this._gridMC.currentSubrow;
-    this.currentSubrow = this._gridMC.currentSubrow;
+    let subrowAdjustment = this.currentSubrow - this._grid.currentSubrow;
+    this.currentSubrow = this._grid.currentSubrow;
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
       let isBottomRow = (y === Grid.ROW_COUNT - 1);
       for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
-        let tile = this._gridMC.tileAt(x,y);
+        let tile = this._grid.tileAt(x,y);
         let tileView = this._rows[y][x];
         let color = this.colorForTile(tile, isBottomRow);
         tileView.style.bg = color;

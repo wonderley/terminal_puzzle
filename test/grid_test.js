@@ -6,7 +6,7 @@ const Tile = require('../src/tile.js').Tile;
 const TileState = require('../src/tile.js').TileState;
 let my_grid = new Grid();
 let GameController = require('../src/game_controller.js').GameController;
-const GravityController = require('../src/gravity_Controller.js').GravityController;
+const GravityController = require('../src/gravity_controller.js').GravityController;
 
 describe('grid', function() {
   it('should have height and width', function() {
@@ -124,7 +124,6 @@ describe('grid', function() {
 
 describe('randomOccupiedTileState', function() {
   it('only returns valid occupied tile states', function() {
-    debugger;
     for (let i = 0; i < 100; ++i) {
       let validStates = Tile.NONEMPTY_STATES;
       let grid = new Grid();

@@ -15,7 +15,6 @@ describe('TileClearController', function() {
 
 describe('TileClearController markTilesToClear', function() {
   it('marks three consecutive tiles in same row with same non-empty state', function() {
-    debugger;
     let grid = new Grid();
     let controller = new tileClearControllerModule.TileClearController(grid);
     let someRow = Grid.ROW_COUNT - 2;
