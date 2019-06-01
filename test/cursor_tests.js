@@ -1,105 +1,105 @@
 #! /usr/bin/env node
 /* Run with mocha */
 /* global require, describe, it */
-var assert = require('assert');
-var gridModule = require('../src/grid.js');
-var terminalGridModule = require('../src/terminal_grid_view.js');
-var GameController = require('../src/game_controller.js').GameController;
-var cursorModule = require('../src/cursor.js');
+let assert = require('assert');
+let gridModule = require('../src/grid.js');
+let terminalGridModule = require('../src/terminal_grid_view.js');
+let GameController = require('../src/game_controller.js').GameController;
+let cursorModule = require('../src/cursor.js');
 
-describe('Cursor', function(){
-  it('can be created', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor', function() {
+  it('can be created', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
   });
 });
 
-describe('Cursor isValidCursorPosition', function(){
-  it('returns true if the position is valid on grid and so is the position to the right', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    for (var x = 0; x < grid.columnCount - 1; ++x){
-      for (var y = 0; y < grid.rowCount - 1; ++y){
+describe('Cursor isValidCursorPosition', function() {
+  it('returns true if the position is valid on grid and so is the position to the right', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
+    for (let x = 0; x < grid.COLUMN_COUNT - 1; ++x) {
+      for (let y = 0; y < grid.ROW_COUNT - 1; ++y) {
         assert(cursor.isValidCursorPosition(x,y) === true);
       }
     }
   });
-  it('returns false if the position is on the bottom row', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    for (var x = 0; x < grid.columnCount - 1; ++x){
-      assert(cursor.isValidCursorPosition(x, grid.rowCount - 1) === false);
+  it('returns false if the position is on the bottom row', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
+    for (let x = 0; x < grid.COLUMN_COUNT - 1; ++x) {
+      assert(cursor.isValidCursorPosition(x, grid.ROW_COUNT - 1) === false);
     }
   });
-  it('returns false if the position is on the rightmost column', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    for (var y = 0; y < grid.rowCount - 1; ++y){
-      assert(cursor.isValidCursorPosition(grid.columnCount - 1, y) === false);
+  it('returns false if the position is on the rightmost column', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
+    for (let y = 0; y < grid.ROW_COUNT - 1; ++y) {
+      assert(cursor.isValidCursorPosition(grid.COLUMN_COUNT - 1, y) === false);
     }
   });
 });
 
-describe('Cursor isValidCursorPosition', function(){
-  it('returns false if the position is invalid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor isValidCursorPosition', function() {
+  it('returns false if the position is invalid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
     // Tiles furthest to the right
-    for (var y = 0; y < grid.rowCount; ++y){
+    for (let y = 0; y < grid.ROW_COUNT; ++y) {
       assert(cursor.isValidCursorPosition(-1,y) === false);
-      assert(cursor.isValidCursorPosition(grid.columnCount,y) === false);
+      assert(cursor.isValidCursorPosition(grid.COLUMN_COUNT,y) === false);
     }
-    for (var x = 0; x < grid.columnCount; ++x){
+    for (let x = 0; x < grid.COLUMN_COUNT; ++x) {
       assert(cursor.isValidCursorPosition(x,-1) === false);
-      assert(cursor.isValidCursorPosition(x,grid.rowCount) === false);
+      assert(cursor.isValidCursorPosition(x,grid.ROW_COUNT) === false);
     }
   });
 });
 
-describe('Cursor isValidCursorPosition', function(){
-  it('returns false if the position to the right is invalid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor isValidCursorPosition', function() {
+  it('returns false if the position to the right is invalid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
     // Tiles furthest to the right
-    for (var y = 0; y < grid.rowCount; ++y){
+    for (let y = 0; y < grid.ROW_COUNT; ++y) {
       assert(cursor.isValidCursorPosition(-2,y) === false);
-      assert(cursor.isValidCursorPosition(grid.columnCount - 1,y) === false);
+      assert(cursor.isValidCursorPosition(grid.COLUMN_COUNT - 1,y) === false);
     }
-    for (var x = 0; x < grid.columnCount; ++x){
+    for (let x = 0; x < grid.COLUMN_COUNT; ++x) {
       assert(cursor.isValidCursorPosition(x - 1,-1) === false);
-      assert(cursor.isValidCursorPosition(x - 1,grid.rowCount) === false);
+      assert(cursor.isValidCursorPosition(x - 1,grid.ROW_COUNT) === false);
     }
   });
 });
 
-describe('Cursor', function(){
-  it('has x and y that default to -1', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor', function() {
+  it('has x and y that default to -1', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
     assert(cursor.getX() === -1);
     assert(cursor.getY() === -1);
   });
 });
 
-describe('setPosition', function(){
-  it('throws if invalid position', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.isValidCursorPosition = function(){
+describe('setPosition', function() {
+  it('throws if invalid position', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let cursor = new cursorModule.Cursor(grid, view);
+    cursor.isValidCursorPosition = function() {
       return false;
     };
-    var threw = false;
+    let threw = false;
     try{
       cursor.setPosition(0,0);
-    } catch (e){
+    } catch (e) {
       threw = true;
     } finally {
       assert(threw);
@@ -107,28 +107,28 @@ describe('setPosition', function(){
   });
 });
 
-describe('setPosition', function(){
-  it('sets x and y', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('setPosition', function() {
+  it('sets x and y', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(4,5);
     assert(cursor.getX() === 4);
     assert(cursor.getY() === 5);
   });
 });
 
-describe('setPosition', function(){
-  it('tells view to draw cursor', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    var drawCursorAtCalled = false;
-    view.drawCursorAt = function(){
+describe('setPosition', function() {
+  it('tells view to draw cursor', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    let drawCursorAtCalled = false;
+    view.drawCursorAt = function() {
       drawCursorAtCalled = true;
     };
     cursor.setPosition(4,5);
@@ -136,14 +136,14 @@ describe('setPosition', function(){
   });
 });
 
-describe('setPosition', function(){
-  it('doesn\'t tell view to clear cursor the first time it\'s called', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    var clearCursorAtCalled = false;
-    view.clearCursorAt = function(){
+describe('setPosition', function() {
+  it('doesn\'t tell view to clear cursor the first time it\'s called', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    let clearCursorAtCalled = false;
+    view.clearCursorAt = function() {
       clearCursorAtCalled = true;
     };
     cursor.setPosition(4,5);
@@ -151,14 +151,14 @@ describe('setPosition', function(){
   });
 });
 
-describe('setPosition', function(){
-  it('tells view to clear cursor after first time', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    var clearCursorAtCalled = false;
-    view.clearCursorAt = function(){
+describe('setPosition', function() {
+  it('tells view to clear cursor after first time', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    let clearCursorAtCalled = false;
+    view.clearCursorAt = function() {
       clearCursorAtCalled = true;
     };
     cursor.setPosition(2,2);
@@ -167,14 +167,14 @@ describe('setPosition', function(){
   });
 });
 
-describe('setPosition', function(){
-  it('Doesn\'t tell view to draw cursor if position unchanged', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    var drawCursorAtCalled;
-    view.drawCursorAt = function(){
+describe('setPosition', function() {
+  it('Doesn\'t tell view to draw cursor if position unchanged', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    let drawCursorAtCalled;
+    view.drawCursorAt = function() {
       drawCursorAtCalled = true;
     };
     cursor.setPosition(4,5);
@@ -184,14 +184,14 @@ describe('setPosition', function(){
   });
 });
 
-describe('Cursor goUp', function(){
-  it('Sets position up if the position is valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.isValidCursorPosition = function(){
+describe('Cursor goUp', function() {
+  it('Sets position up if the position is valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    cursor.isValidCursorPosition = function() {
       return true;
     };
     cursor.setPosition(1,1);
@@ -201,15 +201,15 @@ describe('Cursor goUp', function(){
   });
 });
 
-describe('Cursor goUp', function(){
-  it('Does nothing if the position is not valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor goUp', function() {
+  it('Does nothing if the position is not valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
-    cursor.isValidCursorPosition = function(){
+    cursor.isValidCursorPosition = function() {
       return false;
     };
     cursor.goUp();
@@ -218,14 +218,14 @@ describe('Cursor goUp', function(){
   });
 });
 
-describe('Cursor goDown', function(){
-  it('Sets position down if the position is valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.isValidCursorPosition = function(){
+describe('Cursor goDown', function() {
+  it('Sets position down if the position is valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    cursor.isValidCursorPosition = function() {
       return true;
     };
     cursor.setPosition(1,1);
@@ -235,15 +235,15 @@ describe('Cursor goDown', function(){
   });
 });
 
-describe('Cursor goDown', function(){
-  it('Does nothing if the position is not valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor goDown', function() {
+  it('Does nothing if the position is not valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
-    cursor.isValidCursorPosition = function(){
+    cursor.isValidCursorPosition = function() {
       return false;
     };
     cursor.goDown();
@@ -252,14 +252,14 @@ describe('Cursor goDown', function(){
   });
 });
 
-describe('Cursor goLeft', function(){
-  it('Sets position left if the position is valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.isValidCursorPosition = function(){
+describe('Cursor goLeft', function() {
+  it('Sets position left if the position is valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    cursor.isValidCursorPosition = function() {
       return true;
     };
     cursor.setPosition(1,1);
@@ -269,15 +269,15 @@ describe('Cursor goLeft', function(){
   });
 });
 
-describe('Cursor goLeft', function(){
-  it('Does nothing if the position is not valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor goLeft', function() {
+  it('Does nothing if the position is not valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
-    cursor.isValidCursorPosition = function(){
+    cursor.isValidCursorPosition = function() {
       return false;
     };
     cursor.goLeft();
@@ -286,14 +286,14 @@ describe('Cursor goLeft', function(){
   });
 });
 
-describe('Cursor goRight', function(){
-  it('Sets position right if the position is valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
-    cursor.isValidCursorPosition = function(){
+describe('Cursor goRight', function() {
+  it('Sets position right if the position is valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
+    cursor.isValidCursorPosition = function() {
       return true;
     };
     cursor.setPosition(1,1);
@@ -303,15 +303,15 @@ describe('Cursor goRight', function(){
   });
 });
 
-describe('Cursor goRight', function(){
-  it('Does nothing if the position is not valid', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var cursor = new cursorModule.Cursor(grid, view);
+describe('Cursor goRight', function() {
+  it('Does nothing if the position is not valid', function() {
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
-    cursor.isValidCursorPosition = function(){
+    cursor.isValidCursorPosition = function() {
       return false;
     };
     cursor.goRight();
@@ -320,25 +320,25 @@ describe('Cursor goRight', function(){
   });
 });
 
-describe('Cursor swapTiles', function(){
-  it('Calls swapTilesAt at the current position', function(){
-    var grid = new gridModule.Grid();
-    var x1Param = null,
+describe('Cursor swapTiles', function() {
+  it('Calls swapTilesAt at the current position', function() {
+    let grid = new gridModule.Grid();
+    let x1Param = null,
         y1Param = null,
         x2Param = null,
         y2Param = null;
-    grid.swapTilesAt = function(x1, y1, x2, y2){
+    grid.swapTilesAt = function(x1, y1, x2, y2) {
       x1Param = x1;
       y1Param = y1;
       x2Param = x2;
       y2Param = y2;
     };
-    var view = new terminalGridModule.TerminalGridView(grid);
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    view.updateView = function(){};
+    let view = new terminalGridModule.TerminalGridView(grid);
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    view.updateView = function() {};
     GameController.instance.view = view;
-    var cursor = new cursorModule.Cursor(grid, view);
+    let cursor = new cursorModule.Cursor(grid, view);
     cursor.setPosition(1,1);
     cursor.swapTiles();
     assert(x1Param === 1);
@@ -347,20 +347,20 @@ describe('Cursor swapTiles', function(){
     assert(y2Param === 1);
   });
   it('Calls onGridChanged', function() {
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
+    let grid = new gridModule.Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
     grid.delegate = {};
-    view.clearCursorAt = function(){};
-    view.drawCursorAt = function(){};
-    var onGridChangedCalled = false;
-    var realOnGridChanged = GameController.instance.onGridChanged;
+    view.clearCursorAt = function() {};
+    view.drawCursorAt = function() {};
+    let onGridChangedCalled = false;
+    let realOnGridChanged = GameController.instance.onGridChanged;
     try {
-      GameController.instance.onGridChanged = function(){
+      GameController.instance.onGridChanged = function() {
         onGridChangedCalled = true;
       };
-      view.updateView = function(){
+      view.updateView = function() {
       };
-      var cursor = new cursorModule.Cursor(grid, view);
+      let cursor = new cursorModule.Cursor(grid, view);
       cursor.setPosition(1,1);
       cursor.swapTiles();
       assert(onGridChangedCalled);

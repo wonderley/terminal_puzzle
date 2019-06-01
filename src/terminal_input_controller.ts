@@ -10,29 +10,29 @@ class TerminalInputController implements InputDelegate {
     if (!input || !input.full) {
       return;
     }
-    var key = input.full;
+    let key = input.full;
     // Quit on Escape, q, or Control-C.
-    if (key === 'escape' || key === 'q' || key === 'C-c'){
+    if (key === 'escape' || key === 'q' || key === 'C-c') {
       return process.exit(0);
     }
-    if (key === 'up' || key === 'k'){
+    if (key === 'up' || key === 'k') {
       this._cursor.goUp();
     }
-    if (key === 'down' || key === 'j'){
+    if (key === 'down' || key === 'j') {
       this._cursor.goDown();
     }
-    if (key === 'left' || key === 'h'){
+    if (key === 'left' || key === 'h') {
       this._cursor.goLeft();
     }
-    if (key === 'right' || key === 'l'){
+    if (key === 'right' || key === 'l') {
       this._cursor.goRight();
     }
-    if (key === 'space'){
+    if (key === 'space') {
       this._cursor.swapTiles();
     }
-    if (key === 'a'){
+    if (key === 'a') {
       // Quickly advance the game four times.
-	    var advanceGameWithBoundThis = GameController.instance.advanceGame.bind(GameController);
+	    let advanceGameWithBoundThis = GameController.instance.advanceGame.bind(GameController);
       setTimeout(advanceGameWithBoundThis, 100);
       setTimeout(advanceGameWithBoundThis, 200);
       setTimeout(advanceGameWithBoundThis, 300);

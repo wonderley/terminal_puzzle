@@ -1,12 +1,12 @@
 #! /usr/bin/env node
-var GameController = require('../src/game_controller.js').GameController;
+let GameController = require('../src/game_controller.js').GameController;
 if (require.main === module) {
-  var Grid = require('../src/grid.js').Grid;
-  var TerminalGridView = require('../src/terminal_grid_view.js').TerminalGridView;
-  var Cursor = require('../src/cursor.js').Cursor;
-  var TerminalInputController = require('../src/terminal_input_controller.js').TerminalInputController;
-  var GravityController = require('../src/gravity_controller.js').GravityController;
-  var TileClearController = require('../src/tile_clear_controller.js').TileClearController;
+  let Grid = require('../src/grid.js').Grid;
+  let TerminalGridView = require('../src/terminal_grid_view.js').TerminalGridView;
+  let Cursor = require('../src/cursor.js').Cursor;
+  let TerminalInputController = require('../src/terminal_input_controller.js').TerminalInputController;
+  let GravityController = require('../src/gravity_controller.js').GravityController;
+  let TileClearController = require('../src/tile_clear_controller.js').TileClearController;
   const game = GameController.instance;
   game.grid = new Grid();
   game.view = new TerminalGridView(game.grid);

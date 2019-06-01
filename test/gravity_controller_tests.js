@@ -1,68 +1,69 @@
 #! /usr/bin/env node
 /* Run with mocha */
 /* global require, describe, it */
-var assert = require('assert');
-var gravityControllerModule = require('../src/gravity_controller.js');
-var terminalGridModule = require('../src/terminal_grid_view.js');
-var gridModule = require('../src/grid.js');
+const assert = require('assert');
+const gravityControllerModule = require('../src/gravity_controller.js');
+const terminalGridModule = require('../src/terminal_grid_view.js');
+const Grid = require('../src/grid.js').Grid;
+const TileState = require('../src/tile').TileState;
 
-describe('GravityController', function(){
-  it('can be created', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var controller = new gravityControllerModule.GravityController(grid, view);
+describe('GravityController', function() {
+  it('can be created', function() {
+    let grid = new Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let controller = new gravityControllerModule.GravityController(grid, view);
   });
 });
 
-describe('GravityController applyGravity', function(){
-  it('drops single tiles with empty tiles below them to the bottom', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var controller = new gravityControllerModule.GravityController(grid, view);
-    var tile1 = grid.tileAt(2, 2);
-    var tile2 = grid.tileAt(3, 3);
-    var tile3 = grid.tileAt(4, 4);
-    var tile4 = grid.tileAt(5, 5);
-    tile1.state = gridModule.TileState.A;
-    tile2.state = gridModule.TileState.B;
-    tile3.state = gridModule.TileState.C;
-    tile4.state = gridModule.TileState.D;
+describe('GravityController applyGravity', function() {
+  it('drops single tiles with empty tiles below them to the bottom', function() {
+    let grid = new Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let controller = new gravityControllerModule.GravityController(grid, view);
+    let tile1 = grid.tileAt(2, 2);
+    let tile2 = grid.tileAt(3, 3);
+    let tile3 = grid.tileAt(4, 4);
+    let tile4 = grid.tileAt(5, 5);
+    tile1.state = TileState.A;
+    tile2.state = TileState.B;
+    tile3.state = TileState.C;
+    tile4.state = TileState.D;
     controller.applyGravity();
-    assert(grid.tileAt(2, gridModule.Grid.rowCount - 1) === tile1);
-    assert(grid.tileAt(2, 2).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(3, gridModule.Grid.rowCount - 1) === tile2);
-    assert(grid.tileAt(3, 3).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(4, gridModule.Grid.rowCount - 1) === tile3);
-    assert(grid.tileAt(4, 4).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(5, gridModule.Grid.rowCount - 1) === tile4);
-    assert(grid.tileAt(5, 5).state === gridModule.TileState.EMPTY);
+    assert(grid.tileAt(2, Grid.ROW_COUNT - 1) === tile1);
+    assert(grid.tileAt(2, 2).state === TileState.EMPTY);
+    assert(grid.tileAt(3, Grid.ROW_COUNT - 1) === tile2);
+    assert(grid.tileAt(3, 3).state === TileState.EMPTY);
+    assert(grid.tileAt(4, Grid.ROW_COUNT - 1) === tile3);
+    assert(grid.tileAt(4, 4).state === TileState.EMPTY);
+    assert(grid.tileAt(5, Grid.ROW_COUNT - 1) === tile4);
+    assert(grid.tileAt(5, 5).state === TileState.EMPTY);
   });
-  it('drops tiles in same column to the bottom', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var controller = new gravityControllerModule.GravityController(grid, view);
-    var tile1 = grid.tileAt(2, 2);
-    var tile2 = grid.tileAt(2, 3);
-    tile1.state = gridModule.TileState.A;
-    tile2.state = gridModule.TileState.B;
+  it('drops tiles in same column to the bottom', function() {
+    let grid = new Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let controller = new gravityControllerModule.GravityController(grid, view);
+    let tile1 = grid.tileAt(2, 2);
+    let tile2 = grid.tileAt(2, 3);
+    tile1.state = TileState.A;
+    tile2.state = TileState.B;
     controller.applyGravity();
-    assert(grid.tileAt(2, gridModule.Grid.rowCount - 2) === tile1);
-    assert(grid.tileAt(2, 2).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(2, gridModule.Grid.rowCount - 1) === tile2);
-    assert(grid.tileAt(2, 3).state === gridModule.TileState.EMPTY);
+    assert(grid.tileAt(2, Grid.ROW_COUNT - 2) === tile1);
+    assert(grid.tileAt(2, 2).state === TileState.EMPTY);
+    assert(grid.tileAt(2, Grid.ROW_COUNT - 1) === tile2);
+    assert(grid.tileAt(2, 3).state === TileState.EMPTY);
   });
-  it('drops tiles in same column with space between them to the bottom', function(){
-    var grid = new gridModule.Grid();
-    var view = new terminalGridModule.TerminalGridView(grid);
-    var controller = new gravityControllerModule.GravityController(grid, view);
-    var tile1 = grid.tileAt(4, 3);
-    var tile2 = grid.tileAt(4, 6);
-    tile1.state = gridModule.TileState.C;
-    tile2.state = gridModule.TileState.D;
+  it('drops tiles in same column with space between them to the bottom', function() {
+    let grid = new Grid();
+    let view = new terminalGridModule.TerminalGridView(grid);
+    let controller = new gravityControllerModule.GravityController(grid, view);
+    let tile1 = grid.tileAt(4, 3);
+    let tile2 = grid.tileAt(4, 6);
+    tile1.state = TileState.C;
+    tile2.state = TileState.D;
     controller.applyGravity();
-    assert(grid.tileAt(4, gridModule.Grid.rowCount - 2) === tile1);
-    assert(grid.tileAt(4, 3).state === gridModule.TileState.EMPTY);
-    assert(grid.tileAt(4, gridModule.Grid.rowCount - 1) === tile2);
-    assert(grid.tileAt(4, 6).state === gridModule.TileState.EMPTY);
+    assert(grid.tileAt(4, Grid.ROW_COUNT - 2) === tile1);
+    assert(grid.tileAt(4, 3).state === TileState.EMPTY);
+    assert(grid.tileAt(4, Grid.ROW_COUNT - 1) === tile2);
+    assert(grid.tileAt(4, 6).state === TileState.EMPTY);
   });
 });

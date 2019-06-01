@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 /* Run with mocha */
 /* global require, describe, it */
-var assert = require('assert');
-var GameController = require('../src/game_controller.js');
+let assert = require('assert');
+let GameController = require('../src/game_controller.js');
 
-describe('GameController', function(){
+describe('GameController', function() {
 });

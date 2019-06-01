@@ -21,7 +21,7 @@ export class GameController {
   }
   onGridChanged() {
     this.view.updateView();
-    var that: GameController = this;
+    let that: GameController = this;
     setTimeout(function() {
       that.gravityController.applyGravity();
       that.view.updateView();
@@ -35,15 +35,15 @@ export class GameController {
   }
 
   evaluateGrid() {
-    if (!this.tileClearController.markTilesToClear()){
+    if (!this.tileClearController.markTilesToClear()) {
       return;
     }
     this.view.updateView();
-    var that = this;
-    setTimeout(function(){
+    let that = this;
+    setTimeout(function() {
       that.tileClearController.clearMarkedTiles();
       that.view.updateView();
-      setTimeout(function(){
+      setTimeout(function() {
         that.onGridChanged();
       }, 100);
     }, 500);
@@ -51,7 +51,7 @@ export class GameController {
 
   startGame() {
     this.view.initializeView();
-    this.cursor.setPosition(Grid.columnCount / 2, Grid.rowCount / 2);
+    this.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
     this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
   }
 

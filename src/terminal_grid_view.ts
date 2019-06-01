@@ -1,7 +1,8 @@
 #! /usr/bin/env node
-import { Grid, Tile, TileState } from './grid';
+import { Grid } from './grid';
+import { Tile, TileState } from './tile';
 import { InputDelegate } from './input_delegate';
-var blessed = require('blessed');
+let blessed = require('blessed');
 
 export class TerminalGridView {
   public static readonly tileWidth: number = 4;
@@ -21,20 +22,20 @@ export class TerminalGridView {
   }
 
   private colorForTile(tile: Tile, isBottomRow: boolean) {
-    if (tile.markedToClear){
+    if (tile.markedToClear) {
       return 'black';
     }
-    var light = isBottomRow ? '' : 'light ';
-    var tileState = tile.state;
-    if (tileState === TileState.EMPTY){
+    let light = isBottomRow ? '' : 'light ';
+    let tileState = tile.state;
+    if (tileState === TileState.EMPTY) {
       return 'default';
-    } else if (tileState === TileState.A){
+    } else if (tileState === TileState.A) {
       return light + 'green';
-    } else if (tileState === TileState.B){
+    } else if (tileState === TileState.B) {
       return light + 'blue';
-    } else if (tileState === TileState.C){
+    } else if (tileState === TileState.C) {
       return light + 'magenta';
-    } else if (tileState === TileState.D){
+    } else if (tileState === TileState.D) {
       return light + 'red';
     }
     throw 'Invalid TileState.';
@@ -52,7 +53,9 @@ export class TerminalGridView {
   initializeView() {
     this._screen = blessed.screen();
     
-    var inner = blessed.box({  
+    let rowCount = Grid.ROW_COUNT;
+    let colCount = Grid.COLUMN_COUNT;
+    let inner = blessed.box({  
       top: 'top',
       left: 'left',
       width: colCount * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles) + 4,
@@ -61,7 +64,7 @@ export class TerminalGridView {
       bg: 'default',
       tags: true
     });
-    var scoreText = blessed.text({  
+    let scoreText = blessed.text({  
       top: '20%',
       left: '50%',
       width: '30%',
@@ -74,14 +77,12 @@ export class TerminalGridView {
     // Append our box to the screen.
     this._screen.append(inner);
     this._screen.append(scoreText);
-    var rowCount = Grid.rowCount;
-    var colCount = Grid.columnCount;
-    for (var i = 0; i < rowCount; ++i) {
-      var y = TerminalGridView.heightBetweenTiles + i * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles);
-      var tiles = [];
-      for (var j = 0; j < colCount; ++j){
-        var x = TerminalGridView.widthBetweenTiles + j * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
-        var tile = blessed.box({
+    for (let i = 0; i < rowCount; ++i) {
+      let y = TerminalGridView.heightBetweenTiles + i * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles);
+      let tiles = [];
+      for (let j = 0; j < colCount; ++j) {
+        let x = TerminalGridView.widthBetweenTiles + j * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
+        let tile = blessed.box({
           top: y,
           left: x,
           width: TerminalGridView.tileWidth,
@@ -95,7 +96,7 @@ export class TerminalGridView {
       this._rows.push(tiles);
     }
     // Add the line above the bottom row.
-    var bottomRowMarkerLeft = blessed.box({
+    let bottomRowMarkerLeft = blessed.box({
       top: (rowCount - 1) * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles),
       left: 0,
       width: 1,
@@ -103,7 +104,7 @@ export class TerminalGridView {
       fg: 'white',
       bg: 'white'
     });
-    var bottomRowMarkerRight = blessed.box({
+    let bottomRowMarkerRight = blessed.box({
       top: (rowCount - 1) * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles),
       left: 1 + colCount * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles),
       width: 1,
@@ -114,9 +115,9 @@ export class TerminalGridView {
     inner.append(bottomRowMarkerLeft);
     inner.append(bottomRowMarkerRight);
     this._screen.render();
-    var yloc = 4 * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles);
-    var tiles = [];
-    var xloc = 4 * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
+    let yloc = 4 * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles);
+    let tiles = [];
+    let xloc = 4 * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
     this._cursorBox = blessed.box({
       top: yloc,
       left: xloc,
@@ -127,10 +128,10 @@ export class TerminalGridView {
     });
     inner.append(this._cursorBox);
     this._cursorBox.setBack();
-    var bottomRowBlocker = blessed.box({
-      top: (Grid.rowCount - 1) * TerminalGridView.tileHeight + Grid.rowCount * TerminalGridView.heightBetweenTiles,
+    let bottomRowBlocker = blessed.box({
+      top: (Grid.ROW_COUNT - 1) * TerminalGridView.tileHeight + Grid.ROW_COUNT * TerminalGridView.heightBetweenTiles,
       left: 0,
-      width: Grid.columnCount * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles),
+      width: Grid.COLUMN_COUNT * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles),
       height: TerminalGridView.tileHeight,
       fg: 'default',
       bg: 'default'
@@ -141,14 +142,14 @@ export class TerminalGridView {
     this.updateView();
   };
   updateView() {
-    var subrowAdjustment = this.currentSubrow - this._gridMC.currentSubrow;
+    let subrowAdjustment = this.currentSubrow - this._gridMC.currentSubrow;
     this.currentSubrow = this._gridMC.currentSubrow;
-    for (var y = 0; y < Grid.rowCount; ++y){
-      var isBottomRow = (y === Grid.rowCount - 1);
-      for (var x = 0; x < Grid.columnCount; ++x){
-        var tile = this._gridMC.tileAt(x,y);
-        var tileView = this._rows[y][x];
-        var color = this.colorForTile(tile, isBottomRow);
+    for (let y = 0; y < Grid.ROW_COUNT; ++y) {
+      let isBottomRow = (y === Grid.ROW_COUNT - 1);
+      for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
+        let tile = this._gridMC.tileAt(x,y);
+        let tileView = this._rows[y][x];
+        let color = this.colorForTile(tile, isBottomRow);
         tileView.style.bg = color;
         tileView.position.top += subrowAdjustment;
       }
@@ -157,16 +158,16 @@ export class TerminalGridView {
     // Render the screen.
     this._screen.render();
   };
-  drawCursorAt(x: number, y: number){
-    var xloc = x * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
-    var yloc = y * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles) - this.currentSubrow;
+  drawCursorAt(x: number, y: number) {
+    let xloc = x * (TerminalGridView.tileWidth + TerminalGridView.widthBetweenTiles);
+    let yloc = y * (TerminalGridView.tileHeight + TerminalGridView.heightBetweenTiles) - this.currentSubrow;
     this._cursorBox.position.top = yloc;
     this._cursorBox.position.left = xloc;
     this._screen.render();
   };
   clearCursorAt(x: number, y: number) {
-    var tileView = this._rows[y][x];
-    var tileView2 = this._rows[y][x+1];
+    let tileView = this._rows[y][x];
+    let tileView2 = this._rows[y][x+1];
   };
   setInputDelegate(inputDelegate: InputDelegate) {
     this._inputDelegate = inputDelegate;
@@ -174,10 +175,10 @@ export class TerminalGridView {
 }
   
 if (require.main === module) {
-  var grid = new Grid();
-  var view = new TerminalGridView(grid);
+  let grid = new Grid();
+  let view = new TerminalGridView(grid);
   view.initializeView();
-  setInterval(function(){
+  setInterval(function() {
     grid.advanceRows();
     view.updateView();
   }, 2000);

@@ -16,9 +16,9 @@ export class Cursor {
   }
   isValidCursorPosition(x: number, y: number) {
     return x >= 0 &&
-      x < Grid.columnCount - 1 &&
+      x < Grid.COLUMN_COUNT - 1 &&
       y >= 0 &&
-      y < Grid.rowCount - 1;
+      y < Grid.ROW_COUNT - 1;
   }
   setPosition(x: number, y: number) {
     if (!this.isValidCursorPosition(x, y)) {
@@ -36,29 +36,29 @@ export class Cursor {
     this._view.drawCursorAt(this._x, this._y);
   }
   goUp() {
-    var newX = this._x;
-    var newY = this._y - 1;
+    let newX = this._x;
+    let newY = this._y - 1;
     if (this.isValidCursorPosition(newX, newY)) {
       this.setPosition(newX, newY);
     }
   }
   goDown() {
-    var newX = this._x;
-    var newY = this._y + 1;
+    let newX = this._x;
+    let newY = this._y + 1;
     if (this.isValidCursorPosition(newX, newY)) {
       this.setPosition(newX, newY);
     }
   }
   goLeft() {
-    var newX = this._x - 1;
-    var newY = this._y;
+    let newX = this._x - 1;
+    let newY = this._y;
     if (this.isValidCursorPosition(newX, newY)) {
       this.setPosition(newX, newY);
     }
   }
   goRight() {
-    var newX = this._x + 1;
-    var newY = this._y;
+    let newX = this._x + 1;
+    let newY = this._y;
     if (this.isValidCursorPosition(newX, newY)) {
       this.setPosition(newX, newY);
     }
