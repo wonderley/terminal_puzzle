@@ -2,9 +2,9 @@
 /* Run with mocha */
 /* global require, describe, it */
 const assert = require('assert');
-const tileClearControllerModule = require('../src/tile_clear_controller.js');
-const Grid = require('../src/grid.js').Grid;
-const TileState = require('../src/tile.js').TileState;
+const tileClearControllerModule = require('../../src/terminal/tile_clear_controller');
+const Grid = require('../../src/terminal/grid').Grid;
+const TileState = require('../../src/terminal/tile').TileState;
 
 describe('TileClearController', function() {
   it('can be created', function() {

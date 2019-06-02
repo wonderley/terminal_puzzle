@@ -2,10 +2,10 @@
 /* Run with mocha */
 /* global require, describe, it */
 const assert = require('assert');
-const gravityControllerModule = require('../src/gravity_controller.js');
-const terminalGridModule = require('../src/terminal_grid_view.js');
-const Grid = require('../src/grid.js').Grid;
-const TileState = require('../src/tile').TileState;
+const gravityControllerModule = require('../../src/terminal/gravity_controller.js');
+const terminalGridModule = require('../../src/terminal/terminal_grid_view.js');
+const Grid = require('../../src/terminal/grid').Grid;
+const TileState = require('../../src/terminal/tile').TileState;
 
 describe('GravityController', function() {
   it('can be created', function() {

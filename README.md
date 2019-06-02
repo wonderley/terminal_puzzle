@@ -8,7 +8,7 @@ To run:
 
   npm install -g typescript
 
-  bin/tetris_attack
+  bin/tetris_attack.js
 
 Use the arrow keys or the h, j, k and l keys to move the cursor.
 
@@ -16,5 +16,5 @@ Use the space bar to swap tiles.
 
 To run unit tests:
 
-node_modules/mocha/bin/mocha
+node_modules/mocha/bin/mocha --recursive
 

@@ -2,10 +2,10 @@
 /* Run with mocha */
 /* global require, describe, it */
 let assert = require('assert');
-let gridModule = require('../src/grid.js');
-let terminalGridModule = require('../src/terminal_grid_view.js');
-let cursorModule = require('../src/cursor.js');
-let inputDelegateModule = require('../src/input_delegate.js');
+let gridModule = require('../../src/terminal/grid.js');
+let terminalGridModule = require('../../src/terminal/terminal_grid_view.js');
+let cursorModule = require('../../src/terminal/cursor.js');
+let inputDelegateModule = require('../../src/terminal/input_delegate.js');
 
 describe('TerminalGridView', function() {
   it('can be created', function() {

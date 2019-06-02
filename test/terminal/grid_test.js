@@ -1,12 +1,12 @@
 /* Run with mocha */
 /* global require, describe, it */
 let assert = require('assert');
-let Grid = require('../src/grid.js').Grid;
-const Tile = require('../src/tile.js').Tile;
-const TileState = require('../src/tile.js').TileState;
+let Grid = require('../../src/terminal/grid').Grid;
+const Tile = require('../../src/terminal/tile').Tile;
+const TileState = require('../../src/terminal/tile').TileState;
 let my_grid = new Grid();
-let GameController = require('../src/game_controller.js').GameController;
-const GravityController = require('../src/gravity_controller.js').GravityController;
+let GameController = require('../../src/terminal/game_controller.js').GameController;
+const GravityController = require('../../src/terminal/gravity_controller.js').GravityController;
 
 describe('grid', function() {
   it('should have height and width', function() {
