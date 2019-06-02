@@ -1,9 +1,10 @@
 import { Grid } from './grid';
 import { Tile, TileState } from './tile';
 import { InputDelegate } from './input_delegate';
+import { GridView } from './grid_view';
 let blessed = require('blessed');
 
-export class TerminalGridView {
+export class TerminalGridView implements GridView {
   public static readonly tileWidth: number = 4;
   public static readonly tileHeight: number = 3;
   public static readonly widthBetweenTiles: number = 2;
