@@ -116,7 +116,7 @@ describe('grid', function() {
       }
       row.forEach(function(tile, x) {
         let sameTileInNewPosition = grid.tileAt(x, y-1);
-        assert(tile.id === sameTileInNewPosition.id);
+        assert(tile === sameTileInNewPosition);
       });
     });
   });

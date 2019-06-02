@@ -1,7 +1,7 @@
 import { Grid } from './grid';
 
 export class GameController {
-  grid: Grid = null;
+  grid: Grid | null = null;
   view: any = null;
   cursor: any = null;
   inputController: any = null;
@@ -56,8 +56,8 @@ export class GameController {
   }
 
   advanceGame() {
-    this.grid.advanceRowsSmall();
-    if (this.grid.currentSubrow === 0) {
+    this.grid!.advanceRowsSmall();
+    if (this.grid!.currentSubrow === 0) {
       // Assume that the rows have just advanced to the next row.
       // Move the cursor to the next row.
       if (this.cursor.getY() > 0) {

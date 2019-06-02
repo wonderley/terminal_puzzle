@@ -12,6 +12,7 @@ var TileState;
 class Tile {
     constructor(state) {
         this.state = state;
+        this.markedToClear = false;
         Tile.__tileCount += 1;
     }
 }

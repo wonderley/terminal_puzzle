@@ -1,6 +1,6 @@
 import { Grid } from './grid';
 export declare class GameController {
-    grid: Grid;
+    grid: Grid | null;
     view: any;
     cursor: any;
     inputController: any;

@@ -8,10 +8,6 @@ class Cursor {
         this._view = _view;
         this._x = -1;
         this._y = -1;
-        this.swapTiles = function () {
-            this._grid.swapTilesAt(this._x, this._y, this._x + 1, this._y);
-            game_controller_1.GameController.instance.onGridChanged();
-        };
     }
     getX() {
         return this._x;
@@ -66,6 +62,10 @@ class Cursor {
         if (this.isValidCursorPosition(newX, newY)) {
             this.setPosition(newX, newY);
         }
+    }
+    swapTiles() {
+        this._grid.swapTilesAt(this._x, this._y, this._x + 1, this._y);
+        game_controller_1.GameController.instance.onGridChanged();
     }
 }
 exports.Cursor = Cursor;

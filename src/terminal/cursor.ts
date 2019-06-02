@@ -62,8 +62,8 @@ export class Cursor {
       this.setPosition(newX, newY);
     }
   }
-  swapTiles = function() {
+  swapTiles() {
     this._grid.swapTilesAt(this._x, this._y, this._x + 1, this._y);
     GameController.instance.onGridChanged();
-  };
+  }
 }

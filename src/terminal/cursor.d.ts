@@ -14,5 +14,5 @@ export declare class Cursor {
     goDown(): void;
     goLeft(): void;
     goRight(): void;
-    swapTiles: () => void;
+    swapTiles(): void;
 }

@@ -1,7 +1,7 @@
 import { Grid } from './grid';
 
 export class GameController {
-  grid: Grid = null;
+  grid: Grid | null = null;
   view: any = null;
   cursor: any = null;
   inputController: any = null;

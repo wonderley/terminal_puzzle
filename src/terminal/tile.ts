@@ -16,6 +16,5 @@ export class Tile {
   constructor(public state: TileState) {
     Tile.__tileCount += 1;
   }
-  id: number;
-  markedToClear: boolean;
+  markedToClear: boolean = false;
 }

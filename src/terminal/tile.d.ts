@@ -11,6 +11,5 @@ export declare class Tile {
     static readonly NONEMPTY_STATES: TileState[];
     static __tileCount: number;
     constructor(state: TileState);
-    id: number;
     markedToClear: boolean;
 }
