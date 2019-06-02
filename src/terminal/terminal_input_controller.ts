@@ -39,7 +39,3 @@ export class TerminalInputController implements InputDelegate {
     }
   };
 }
-  
-module.exports = {
-  TerminalInputController: TerminalInputController
-};
