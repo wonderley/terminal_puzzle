@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { Grid } from './grid';
 import { GameController } from './game_controller';
 import { TerminalGridView } from './terminal_grid_view';

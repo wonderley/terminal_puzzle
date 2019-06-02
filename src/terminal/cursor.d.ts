@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { Grid } from './grid';
 import { TerminalGridView } from './terminal_grid_view';
 export declare class Cursor {

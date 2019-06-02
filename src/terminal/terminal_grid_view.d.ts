@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { Grid } from './grid';
 import { InputDelegate } from './input_delegate';
 export declare class TerminalGridView {

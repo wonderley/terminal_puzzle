@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 let GameController = require('../src/terminal/game_controller.js').GameController;
 if (require.main === module) {
   let Grid = require('../src/terminal/grid.js').Grid;

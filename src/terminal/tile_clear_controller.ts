@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { Grid } from './grid';
 import { Tile, TileState } from './tile';
 

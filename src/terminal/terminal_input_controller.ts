@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 import { Cursor } from './cursor';
 import { GameController } from './game_controller';
 import { InputDelegate } from './input_delegate';
