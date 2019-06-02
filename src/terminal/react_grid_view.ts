@@ -171,13 +171,3 @@ export class TerminalGridView {
     // this._inputDelegate = inputDelegate;
   };
 }
-  
-if (require.main === module) {
-  let grid = new Grid();
-  let view = new TerminalGridView(grid);
-  view.initializeView();
-  setInterval(function() {
-    grid.advanceRows();
-    view.updateView();
-  }, 2000);
-}

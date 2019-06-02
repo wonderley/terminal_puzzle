@@ -8,25 +8,13 @@ import { Cursor } from './terminal/cursor';
 import { TerminalInputController } from './terminal/terminal_input_controller';
 import { GravityController } from './terminal/gravity_controller';
 import { TileClearController } from './terminal/tile_clear_controller';
+import GridComponent from './components/GridComponent';
 
-const App: React.FC = () => {
+export function App() {
   start();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GridComponent name="TypeScript" />
     </div>
   );
 }
