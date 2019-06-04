@@ -1,14 +1,13 @@
 .grid {
   text-align: center;
-  margin: 20px;
-  padding: 20px;
   font-size: 48px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-color: whitesmoke;
   border-width: 10px;
   border-style: solid;
   border-radius: 5px;
-  display: relative;
+  position: relative;
+  display: block;
   height: 100vh;
   width: 50vh;
 }

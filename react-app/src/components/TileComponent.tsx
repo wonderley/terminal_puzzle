@@ -6,6 +6,8 @@ export interface TileProps {
   tile: Tile;
   top: number;
   left: number;
+  height: number;
+  width: number;
 }
 
 export class TileComponent
@@ -16,6 +18,8 @@ export class TileComponent
            style={{
              top: this.props.top,
              left: this.props.left,
+             height: this.props.height,
+             width: this.props.width,
            }}
       />
     );

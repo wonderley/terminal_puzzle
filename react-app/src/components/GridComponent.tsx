@@ -7,38 +7,26 @@ import { TileComponent } from './TileComponent';
 
 export interface GridProps {
   grid: Grid;
-  name: string;
+  height: number,
+  width: number,
+}
+
+interface GridDimensions {
+  height: number,
+  width: number,
 }
 
 export interface GridState {
-  dimensions: {
-    height: number,
-    width: number,
-  } | null;
+  dimensions: GridDimensions | null;
 }
 
 export class GridComponent
        extends React.Component<GridProps, GridState>
        implements GridView {
-  private _container: HTMLDivElement | null = null;
-
-  constructor(props: any, context?: any) {
-    super(props, context);
-    this.state = { dimensions: null }
-  }
 
   render() {
-    const { dimensions } = this.state;
-    return (
-      <div className="grid" ref={el => (this._container = el)}>
-        {dimensions && this.renderContent(dimensions)}
-      </div>
-    );
-  }
-
-  renderContent(dimensions: { height: number, width: number }): JSX.Element[] {
-    const tileHeight = dimensions.height / Grid.ROW_COUNT;
-    const tileWidth = dimensions.width / Grid.COLUMN_COUNT;
+    const tileHeight = this.props.height / Grid.ROW_COUNT;
+    const tileWidth = this.props.width / Grid.COLUMN_COUNT;
     const tiles: JSX.Element[] = [];
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
       for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
@@ -47,19 +35,20 @@ export class GridComponent
         tiles.push(<TileComponent
                       tile={this.props.grid.tileAt(x,y)}
                       top={top}
-                      left={left} />);
+                      left={left}
+                      height={tileHeight}
+                      width={tileWidth} />);
       }
     }
-    return tiles;
-  }
-
-  componentDidMount() {
-    this.setState({
-      dimensions: {
-        width: this._container!.offsetWidth,
-        height: this._container!.offsetHeight,
-      },
-    });
+    return (
+      <div className="grid"
+           style={{
+            height: this.props.height,
+            width: this.props.width,
+           }} >
+        {tiles}
+      </div>
+    );
   }
 
   initializeView(): void {
@@ -71,6 +60,7 @@ export class GridComponent
     // this.props.grid.advanceRows();
     this.updateView();
   }
+
   updateView(): void {
     // update the tile locations
     // update tile holder view location

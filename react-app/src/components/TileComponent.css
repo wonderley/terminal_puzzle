@@ -1,10 +1,9 @@
 .tile {
-  height: 10%;
-  width: 20%;
-  margin: 10px;
-  top: 400px;
-  left: 400px;
-  position: relative;
+  position: absolute;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 5px;
 }
 
 .tile.empty {
