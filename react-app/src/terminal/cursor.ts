@@ -1,9 +1,9 @@
 import { Grid } from './grid';
 import { GameController } from './game_controller';
-import { TerminalGridView } from './terminal_grid_view';
+import { GridView } from './grid_view';
 
 export class Cursor {
-  constructor(private _grid: Grid, private _view: TerminalGridView) {
+  constructor(private _grid: Grid, private _view: GridView) {
   }
   private _x: number = -1;
   private _y: number = -1;
@@ -21,7 +21,10 @@ export class Cursor {
   }
   setPosition(x: number, y: number) {
     if (!this.isValidCursorPosition(x, y)) {
-      throw 'Invalid position';  
+      throw new Error('Invalid position');
+    }
+    if (!this._view) {
+      throw new Error('No view defined for cursor');
     }
     if (this._x === x && this._y === y) {
       return;

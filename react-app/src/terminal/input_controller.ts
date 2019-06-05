@@ -2,14 +2,19 @@ import { Cursor } from './cursor';
 import { GameController } from './game_controller';
 import { InputDelegate } from './input_delegate';
   
-export class TerminalInputController implements InputDelegate {
+export class InputController implements InputDelegate {
   constructor(private _cursor: Cursor) {
+    document.addEventListener("keydown", this.onKeyDown.bind(this));
+    document.addEventListener("keyup", this.onKeyUp.bind(this));
   }
-  onUserInput(input: { full: string }) {
-    if (!input || !input.full) {
-      return;
-    }
-    let key = input.full;
+
+  onKeyDown(e: Event) {
+    debugger;
+  }
+  onKeyUp(e: Event) {
+    debugger;
+  }
+  onUserInput(key: string) {
     // Quit on Escape, q, or Control-C.
     if (key === 'escape' || key === 'q' || key === 'C-c') {
       return process.exit(0);

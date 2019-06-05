@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './GridComponent.css';
 import { GridView } from '../terminal/grid_view';
-import { InputDelegate } from '../terminal/input_delegate';
 import { Grid } from '../terminal/grid';
 import { TileComponent } from './TileComponent';
 
@@ -24,7 +23,6 @@ export interface GridState {
 export class GridComponent
        extends React.Component<GridProps, GridState>
        implements GridView {
-
   render() {
     const tileBorderWidth = 2;
     const tileHeight =
@@ -71,13 +69,12 @@ export class GridComponent
       tile.tileComponent!.setState({ cursor: true });
     });
   }
+
   clearCursorAt(x: number, y: number): void {
     [x, x+1].forEach(xVal => {
       const tile = this.props.grid.tileAt(xVal, y);
       tile.tileComponent!.setState({ cursor: false });
     });
-  }
-  setInputDelegate(inputDelegate: InputDelegate): void {
   }
 }
 

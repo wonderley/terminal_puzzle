@@ -3,7 +3,7 @@ import './App.css';
 import { GameController } from './terminal/game_controller';
 import { Grid } from './terminal/grid';
 import { Cursor } from './terminal/cursor';
-import { TerminalInputController } from './terminal/terminal_input_controller';
+import { InputController } from './terminal/input_controller';
 import { GravityController } from './terminal/gravity_controller';
 import { TileClearController } from './terminal/tile_clear_controller';
 import GridComponent from './components/GridComponent';
@@ -32,7 +32,8 @@ export class App extends React.Component<any, AppState> {
   render() {
     const { dimensions } = this.state;
     return (
-      <div className="App" ref={el => (this._container = el)}>
+      <div className="App"
+        ref={el => (this._container = el)}>
         {dimensions && this.renderContent(dimensions)}
       </div>
     );
@@ -71,11 +72,10 @@ export class App extends React.Component<any, AppState> {
   }
   gridComponentDidMount(gridComponent: GridComponent) {
     const game = GameController.instance;
-    game.view = gridComponent;
     const grid: Grid = game.grid!
+    game.view = gridComponent;
     game.cursor = new Cursor(grid, game.view);
-    game.inputController = new TerminalInputController(game.cursor);
-    game.view.setInputDelegate(game.inputController);
+    game.inputController = new InputController(game.cursor);
     game.gravityController = new GravityController(grid, game.view);
     game.tileClearController = new TileClearController(grid);
     game.gameAdvanceIntervalInMillis = 3000;

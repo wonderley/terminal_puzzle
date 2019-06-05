@@ -1,6 +1,6 @@
 import { Grid } from './grid';
 import { TileState } from './tile';
-import { TerminalGridView as View } from './terminal_grid_view';
+import { GridView as View } from './grid_view';
 
 /**
  * Applies gravity to the Grid

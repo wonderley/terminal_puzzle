@@ -1,3 +1,3 @@
 export interface InputDelegate {
-  onUserInput(input: { full: string }): void;
+  onUserInput(key: string): void;
 }
