@@ -3,7 +3,7 @@ import { Tile, TileState } from './tile';
 
 export class Grid {
   // private
-  private _rows: any[] = [];
+  private _rows: Tile[][] = [];
   public static readonly ROW_COUNT: number = 12;
   public static readonly COLUMN_COUNT: number = 6;
   constructor() {

@@ -9,6 +9,7 @@ export interface GridProps {
   grid: Grid;
   height: number,
   width: number,
+  onComponentDidMount: (gridComponent: GridComponent) => void,
 }
 
 interface GridDimensions {
@@ -25,13 +26,16 @@ export class GridComponent
        implements GridView {
 
   render() {
-    const tileHeight = this.props.height / Grid.ROW_COUNT;
-    const tileWidth = this.props.width / Grid.COLUMN_COUNT;
+    const tileBorderWidth = 2;
+    const tileHeight =
+      this.props.height / Grid.ROW_COUNT - tileBorderWidth;
+    const tileWidth =
+      this.props.width / Grid.COLUMN_COUNT - tileBorderWidth;
     const tiles: JSX.Element[] = [];
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
       for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
-        const top = tileHeight * y;
-        const left = tileWidth * x;
+        const top = (tileHeight + tileBorderWidth) * y;
+        const left = (tileWidth + tileBorderWidth) * x;
         tiles.push(<TileComponent
                       tile={this.props.grid.tileAt(x,y)}
                       top={top}
@@ -51,41 +55,27 @@ export class GridComponent
     );
   }
 
+  componentDidMount() {
+    this.props.onComponentDidMount(this);
+  }
+
   initializeView(): void {
-    // create a tile holder view
-    // create the tiles and place them in it
-    // add a cursor
-    // add bottom row marker
-    // this.registerKeys();
-    // this.props.grid.advanceRows();
-    this.updateView();
   }
 
   updateView(): void {
-    // update the tile locations
-    // update tile holder view location
-
-    // const subrowAdjustment = this._currentSubrow - this.props.grid.currentSubrow;
-    // this._currentSubrow = this.props.grid.currentSubrow;
-    // for (let y = 0; y < Grid.ROW_COUNT; ++y) {
-    //   let isBottomRow = (y === Grid.ROW_COUNT - 1);
-    //   for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
-    //     let tile = this.props.grid.tileAt(x,y);
-    //     let tileView = this._rows[y][x];
-        // use css classes for this
-        // let color = this.colorForTile(tile, isBottomRow);
-        // tileView.style.bg = color;
-        // tileView.position.top += subrowAdjustment;
-    //   }
-    // }
-    // update cursor
-    // this._cursorBox.position.top += subrowAdjustment;
-    // render the screen
-    // this._screen.render();
   }
+  
   drawCursorAt(x: number, y: number): void {
+    [x, x+1].forEach(xVal => {
+      const tile = this.props.grid.tileAt(xVal, y);
+      tile.tileComponent!.setState({ cursor: true });
+    });
   }
   clearCursorAt(x: number, y: number): void {
+    [x, x+1].forEach(xVal => {
+      const tile = this.props.grid.tileAt(xVal, y);
+      tile.tileComponent!.setState({ cursor: false });
+    });
   }
   setInputDelegate(inputDelegate: InputDelegate): void {
   }

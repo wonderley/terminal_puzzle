@@ -1,8 +1,6 @@
 .tile {
   position: absolute;
-  border-color: black;
   border-width: 2px;
-  border-style: solid;
   border-radius: 5px;
 }
 
@@ -12,4 +10,13 @@
 
 .tile.nonempty {
   background-color: white;
+}
+
+.tile.cursor {
+  background-color: gray;
+}
+
+.inner-tile {
+  background-color: white;
+  position: absolute;
 }

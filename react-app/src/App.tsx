@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import { GameController } from './terminal/game_controller';
 import { Grid } from './terminal/grid';
-import { ReactGridView } from './terminal/react_grid_view';
 import { Cursor } from './terminal/cursor';
 import { TerminalInputController } from './terminal/terminal_input_controller';
 import { GravityController } from './terminal/gravity_controller';
@@ -29,15 +28,6 @@ export class App extends React.Component<any, AppState> {
       dimensions: null,
       grid: game.grid,
     };
-    game.view = new ReactGridView(game.grid);
-    game.cursor = new Cursor(game.grid, game.view);
-    game.inputController = new TerminalInputController(game.cursor);
-    game.view.setInputDelegate(game.inputController);
-    game.gravityController = new GravityController(game.grid, game.view);
-    game.tileClearController = new TileClearController(game.grid);
-    game.gameAdvanceIntervalInMillis = 3000;
-    game.advanceGameIntervalId = null;
-    game.startGame();
   }
   render() {
     const { dimensions } = this.state;
@@ -48,14 +38,12 @@ export class App extends React.Component<any, AppState> {
     );
   }
   renderContent(dimensions: AppDimensions): JSX.Element {
-    // todo: give dimensions to grid component that can be divided evenly
+    // give dimensions to grid component that can be divided evenly
     // so that there's no pixel fraction issues.
     // todo: can border-width be pulled in here from CSS?
     const gridBorderWidth = 10;
     const maxGridContentHeight =
       this.state.dimensions!.height - 2 * gridBorderWidth;
-    const maxGridContentWidth =
-      this.state.dimensions!.width - 2 * gridBorderWidth;
     const tileHeight =
       Math.floor(maxGridContentHeight / Grid.ROW_COUNT);
     const gridHeight = Grid.ROW_COUNT * tileHeight;
@@ -63,7 +51,8 @@ export class App extends React.Component<any, AppState> {
     const gridWidth = Grid.COLUMN_COUNT * tileHeight;
     return <GridComponent grid={this.state.grid}
                           height={gridHeight}
-                          width={gridWidth} />;
+                          width={gridWidth}
+                          onComponentDidMount={this.gridComponentDidMount} />;
   }
   componentDidMount() {
     // Measure container
@@ -79,6 +68,19 @@ export class App extends React.Component<any, AppState> {
     this.setState({
       dimensions: { height, width },
     });
+  }
+  gridComponentDidMount(gridComponent: GridComponent) {
+    const game = GameController.instance;
+    game.view = gridComponent;
+    const grid: Grid = game.grid!
+    game.cursor = new Cursor(grid, game.view);
+    game.inputController = new TerminalInputController(game.cursor);
+    game.view.setInputDelegate(game.inputController);
+    game.gravityController = new GravityController(grid, game.view);
+    game.tileClearController = new TileClearController(grid);
+    game.gameAdvanceIntervalInMillis = 3000;
+    game.advanceGameIntervalId = null;
+    game.startGame();
   }
 }
 
