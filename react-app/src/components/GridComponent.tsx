@@ -1,11 +1,13 @@
 import * as React from 'react';
 import './GridComponent.css';
-import { GridView } from '../terminal/grid_view';
 import { Grid } from '../terminal/grid';
 import { TileComponent } from './TileComponent';
+import { Cursor } from '../terminal/cursor';
+import { InputController } from '../terminal/input_controller';
+import { GravityController } from '../terminal/gravity_controller';
+import { TileClearController } from '../terminal/tile_clear_controller';
 
 export interface GridProps {
-  grid: Grid;
   height: number,
   width: number,
   onComponentDidMount: (gridComponent: GridComponent) => void,
@@ -21,8 +23,12 @@ export interface GridState {
 }
 
 export class GridComponent
-       extends React.Component<GridProps, GridState>
-       implements GridView {
+       extends React.Component<GridProps, GridState> {
+  model: Grid = new Grid(this); // todo: make Grid a container?
+  gravityController = new GravityController(this.model);
+  tileClearController = new TileClearController(this.model);
+  cursor: Cursor = new Cursor(this.model, this);
+  inputController = new InputController(this.cursor);
   render() {
     const tileBorderWidth = 2;
     const tileHeight =
@@ -35,7 +41,7 @@ export class GridComponent
         const top = (tileHeight + tileBorderWidth) * y;
         const left = (tileWidth + tileBorderWidth) * x;
         tiles.push(<TileComponent
-                      tile={this.props.grid.tileAt(x,y)}
+                      tile={this.model.tileAt(x,y)}
                       top={top}
                       left={left}
                       height={tileHeight}
@@ -57,22 +63,16 @@ export class GridComponent
     this.props.onComponentDidMount(this);
   }
 
-  initializeView(): void {
-  }
-
-  updateView(): void {
-  }
-  
   drawCursorAt(x: number, y: number): void {
     [x, x+1].forEach(xVal => {
-      const tile = this.props.grid.tileAt(xVal, y);
+      const tile = this.model.tileAt(xVal, y);
       tile.tileComponent!.setState({ cursor: true });
     });
   }
 
   clearCursorAt(x: number, y: number): void {
     [x, x+1].forEach(xVal => {
-      const tile = this.props.grid.tileAt(xVal, y);
+      const tile = this.model.tileAt(xVal, y);
       tile.tileComponent!.setState({ cursor: false });
     });
   }

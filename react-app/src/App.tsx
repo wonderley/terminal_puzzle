@@ -1,16 +1,10 @@
 import React from 'react';
 import './App.css';
-import { GameController } from './terminal/game_controller';
 import { Grid } from './terminal/grid';
-import { Cursor } from './terminal/cursor';
-import { InputController } from './terminal/input_controller';
-import { GravityController } from './terminal/gravity_controller';
-import { TileClearController } from './terminal/tile_clear_controller';
-import GridComponent from './components/GridComponent';
+import { GridComponent } from './components/GridComponent';
 
 interface AppState {
   dimensions: AppDimensions | null;
-  grid: Grid;
 }
 
 interface AppDimensions {
@@ -19,14 +13,13 @@ interface AppDimensions {
 }
 
 export class App extends React.Component<any, AppState> {
+  static GAME_ADVANCE_INTERVAL_MILLIS = 3000;
+  // todo advanceGameIntervalId: NodeJS.Timeout | undefined;
   private _container: HTMLDivElement | null = null;
   constructor(props: any, context?: any) {
     super(props, context);
-    const game = GameController.instance;
-    game.grid = new Grid();
     this.state = {
       dimensions: null,
-      grid: game.grid,
     };
   }
   render() {
@@ -50,10 +43,9 @@ export class App extends React.Component<any, AppState> {
     const gridHeight = Grid.ROW_COUNT * tileHeight;
     // Tiles are squares
     const gridWidth = Grid.COLUMN_COUNT * tileHeight;
-    return <GridComponent grid={this.state.grid}
-                          height={gridHeight}
+    return <GridComponent height={gridHeight}
                           width={gridWidth}
-                          onComponentDidMount={this.gridComponentDidMount} />;
+                          onComponentDidMount={this.gridComponentDidMount.bind(this)} />;
   }
   componentDidMount() {
     // Measure container
@@ -71,16 +63,56 @@ export class App extends React.Component<any, AppState> {
     });
   }
   gridComponentDidMount(gridComponent: GridComponent) {
-    const game = GameController.instance;
-    const grid: Grid = game.grid!
-    game.view = gridComponent;
-    game.cursor = new Cursor(grid, game.view);
-    game.inputController = new InputController(game.cursor);
-    game.gravityController = new GravityController(grid, game.view);
-    game.tileClearController = new TileClearController(grid);
-    game.gameAdvanceIntervalInMillis = 3000;
-    game.advanceGameIntervalId = null;
-    game.startGame();
+    // todo game.inputController = new InputController(grid.cursor);
+    gridComponent.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
+    // todo this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
+  }
+
+  // From GameController
+  onGridChanged() {
+    // todo this.view.updateView();
+    // let that: App = this;
+    // setTimeout(function() {
+    //   that.props.children[0].gravityController.applyGravity();
+    //   // todo that.view.updateView();
+    //   that.evaluateGrid();
+    // }, 200);
+  }
+
+  onGameOver() {
+    // todo clearInterval(this.advanceGameIntervalId);
+    // this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), App.GAME_ADVANCE_INTERVAL_MILLIS);
+  }
+
+  get grid(): GridComponent {
+    debugger;
+    return this.props.children as GridComponent;
+  }
+
+  evaluateGrid() {
+    if (!this.grid.tileClearController.markTilesToClear()) {
+      return;
+    }
+    // todo grid.updateView();
+    let that = this;
+    setTimeout(function() {
+      that.grid.tileClearController.clearMarkedTiles();
+      // todo grid.updateView();
+      setTimeout(function() {
+        that.onGridChanged();
+      }, 100);
+    }, 500);
+  }
+
+  advanceGame() {
+    this.grid.model.advanceRowsSmall();
+    if (this.grid.model.currentSubrow === 0) {
+      // Assume that the rows have just advanced to the next row.
+      // Move the cursor to the next row.
+      if (this.grid.cursor.getY() > 0) {
+        this.grid.cursor.setPosition(this.grid.cursor.getX(), this.grid.cursor.getY() - 1);
+      }
+    }
   }
 }
 

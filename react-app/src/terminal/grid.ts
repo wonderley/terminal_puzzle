@@ -1,12 +1,12 @@
-import { GameController } from './game_controller';
 import { Tile, TileState } from './tile';
+import { GridComponent } from '../components/GridComponent';
 
 export class Grid {
   // private
   private _rows: Tile[][] = [];
   public static readonly ROW_COUNT: number = 12;
   public static readonly COLUMN_COUNT: number = 6;
-  constructor() {
+  constructor(private _gridComponent: GridComponent) {
     for (let i = 0; i < Grid.ROW_COUNT; ++i) {
       this.addEmptyRow();
     }
@@ -94,7 +94,7 @@ export class Grid {
   advanceRowsSmall() {
     this.currentSubrow = (this.currentSubrow + 1) % this.subrowsPerRow;
     if (this.currentSubrow > 0) { 
-      GameController.instance.onGridChanged();
+      // todo GameController.instance.onGridChanged();
       return;
     }
     else {
@@ -111,12 +111,12 @@ export class Grid {
     for (let i = 0; i < topRow.length; ++i) {
       let topTile = topRow[i];
       if (topTile.state !== TileState.EMPTY) {
-        GameController.instance.onGameOver();
+        // todo this._gridComponent.onGameOver();
         return;
       }
     }
     this.removeRow();
-    GameController.instance.onGridChanged();
+    // todo GameController.instance.onGridChanged();
   }
 
   randomOccupiedTileState(allowedStates: TileState[]) {

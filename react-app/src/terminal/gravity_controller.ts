@@ -1,12 +1,11 @@
 import { Grid } from './grid';
 import { TileState } from './tile';
-import { GridView as View } from './grid_view';
 
 /**
  * Applies gravity to the Grid
  */
 export class GravityController {
-  constructor(private readonly _grid: Grid, private readonly _view: View) {
+  constructor(private readonly _grid: Grid) {
   }
   dropTileAt(x: number, y: number) {
     let theTile = this._grid.tileAt(x, y);

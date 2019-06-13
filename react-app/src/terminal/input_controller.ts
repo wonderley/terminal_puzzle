@@ -1,5 +1,4 @@
 import { Cursor } from './cursor';
-import { GameController } from './game_controller';
 import { InputDelegate } from './input_delegate';
   
 export class InputController implements InputDelegate {
@@ -33,13 +32,14 @@ export class InputController implements InputDelegate {
     }
     if (key === 'a') {
       // Quickly advance the game four times.
-      let advanceGameWithBoundThis = 
-        GameController.instance.advanceGame
-        .bind(GameController.instance);
-      setTimeout(advanceGameWithBoundThis, 100);
-      setTimeout(advanceGameWithBoundThis, 200);
-      setTimeout(advanceGameWithBoundThis, 300);
-      setTimeout(advanceGameWithBoundThis, 400);
+      // todo
+      // let advanceGameWithBoundThis = 
+      //   GameController.instance.advanceGame
+      //   .bind(GameController.instance);
+      // setTimeout(advanceGameWithBoundThis, 100);
+      // setTimeout(advanceGameWithBoundThis, 200);
+      // setTimeout(advanceGameWithBoundThis, 300);
+      // setTimeout(advanceGameWithBoundThis, 400);
     }
   };
 }

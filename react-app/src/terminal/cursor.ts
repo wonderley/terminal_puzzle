@@ -1,9 +1,8 @@
 import { Grid } from './grid';
-import { GameController } from './game_controller';
-import { GridView } from './grid_view';
+import { GridComponent } from '../components/GridComponent';
 
 export class Cursor {
-  constructor(private _grid: Grid, private _view: GridView) {
+  constructor(private _grid: Grid, private _view: GridComponent) {
   }
   private _x: number = -1;
   private _y: number = -1;
@@ -67,6 +66,6 @@ export class Cursor {
   }
   swapTiles() {
     this._grid.swapTilesAt(this._x, this._y, this._x + 1, this._y);
-    GameController.instance.onGridChanged();
+    // todo GameController.instance.onGridChanged();
   }
 }
