@@ -1,8 +1,7 @@
-import { Grid } from './grid';
-import { GridComponent } from '../components/GridComponent';
+import { Grid } from '../components/Grid';
 
 export class Cursor {
-  constructor(private _grid: Grid, private _view: GridComponent) {
+  constructor(private _grid: Grid, private _view: Grid) {
   }
   private _x: number = -1;
   private _y: number = -1;

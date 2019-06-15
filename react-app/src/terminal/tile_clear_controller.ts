@@ -1,5 +1,5 @@
-import { Grid } from './grid';
-import { Tile, TileState } from './tile';
+import { Grid } from '../components/Grid';
+import { TileProps, TILE_TYPE_EMPTY } from '../components/Tile';
 
 /**
  * Searches the grid for tiles that should be cleared.
@@ -9,14 +9,14 @@ export class TileClearController {
   constructor(private _grid: Grid) {}
   public markTilesToClear() {
     let somethingWasMarked = false;
-    let markEachTile = function(_: any, idx: number, arr: Tile[]) {
-      arr[idx].markedToClear = true;
+    function markEachTile(_: any, idx: number, arr: TileProps[]) {
+      arr[idx].markedToClear = true;;
     };
-    let currentState = TileState.EMPTY;
+    let currentType = TILE_TYPE_EMPTY;
     let consecutiveTiles: any[] = [];
-    function markConsecutiveTilesInArray(tile: Tile, idx: number, arr: Tile[]) {
-      if (tile.state !== TileState.EMPTY &&
-          tile.state === currentState) {
+    function markConsecutiveTilesInArray(tile: TileProps, idx: number, arr: TileProps[]) {
+      if (tile.tileType !== TILE_TYPE_EMPTY &&
+          tile.tileType === currentType) {
         consecutiveTiles.push(tile);
       } else {
         if (consecutiveTiles.length >= 3) {
@@ -32,10 +32,10 @@ export class TileClearController {
           consecutiveTiles.forEach(markEachTile);
         }
         consecutiveTiles = [];
-        currentState = TileState.EMPTY;
+        currentType = TILE_TYPE_EMPTY;
       }
       else {
-        currentState = tile.state;
+        currentType = tile.tileType;
       }
     }
     // Iterate over each row and each column
@@ -49,9 +49,9 @@ export class TileClearController {
     return somethingWasMarked;
   };
   clearMarkedTiles() {
-    function clearTileIfMarked(tile: Tile) {
+    function clearTileIfMarked(tile: TileProps) {
       if (tile.markedToClear) {
-        tile.state = TileState.EMPTY;
+        tile.tileType = 'empty';
         tile.markedToClear = false;
       }
     }

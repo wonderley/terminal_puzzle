@@ -2,14 +2,27 @@
   position: absolute;
   border-width: 2px;
   border-radius: 5px;
-}
-
-.tile.empty {
   background-color: transparent;
 }
 
-.tile.nonempty {
-  background-color: white;
+/* .tile.empty {
+  background-color: transparent;
+} */
+
+.tile.a {
+  background-color: red;
+}
+
+.tile.b {
+  background-color: blue;
+}
+
+.tile.c {
+  background-color: green;
+}
+
+.tile.d {
+  background-color: yellow;
 }
 
 .tile.cursor {

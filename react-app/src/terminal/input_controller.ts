@@ -1,15 +1,15 @@
+import { Grid } from '../components/Grid';
 import { Cursor } from './cursor';
-import { InputDelegate } from './input_delegate';
   
-export class InputController implements InputDelegate {
-  constructor(private _cursor: Cursor) {
+export class InputController {
+  constructor(private _grid: Grid, private _cursor: Cursor) {
     document.addEventListener("keydown", this.onKeyDown.bind(this));
   }
 
   onKeyDown(e: KeyboardEvent) {
-    debugger;
     this.onUserInput(e.key);
   }
+
   onUserInput(key: string) {
     // Quit on Escape, q, or Control-C.
     if (key === 'escape' || key === 'q' || key === 'C-c') {
@@ -31,6 +31,9 @@ export class InputController implements InputDelegate {
       this._cursor.swapTiles();
     }
     if (key === 'a') {
+      // For now, use this as a convenient way of calling advanceGame.
+      this._grid.advanceGame();
+      // This is the real beahvior:
       // Quickly advance the game four times.
       // todo
       // let advanceGameWithBoundThis = 
@@ -41,5 +44,5 @@ export class InputController implements InputDelegate {
       // setTimeout(advanceGameWithBoundThis, 300);
       // setTimeout(advanceGameWithBoundThis, 400);
     }
-  };
+  }
 }
