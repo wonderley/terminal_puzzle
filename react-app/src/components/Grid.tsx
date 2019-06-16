@@ -187,6 +187,22 @@ export class Grid
     let tileIndex = Math.floor(randomFloat);
     return allowedTypes[tileIndex];
   }
+
+
+  evaluate() {
+    if (!this.tileClearController.markTilesToClear()) {
+      return;
+    }
+    // todo grid.updateView();
+    // let that = this;
+    // setTimeout(function() {
+    //   that.grid.tileClearController.clearMarkedTiles();
+    //   // todo grid.updateView();
+    //   setTimeout(function() {
+    //     that.onGridChanged();
+    //   }, 100);
+    // }, 500);
+  }
 }
 
 export default Grid;

@@ -15,12 +15,12 @@ export interface TileState {
   y: number;
   subrow: number;
   cursor: boolean;
-  markedToClear: boolean;
   tileType: TileType;
 }
 
 export const TILE_TYPE_EMPTY: string = 'empty';
-export type TileType = 'empty' | 'a' | 'b' | 'c' | 'd';
+export const TILE_TYPE_MARKED: string = 'marked';
+export type TileType = 'empty' | 'marked' | 'a' | 'b' | 'c' | 'd';
 
 export class Tile
        extends React.Component<TileProps, TileState> {
@@ -37,7 +37,6 @@ export class Tile
       y: props.initialY,
       subrow: 0,
       cursor: false,
-      markedToClear: false,
       tileType: 'empty',
     };
   }

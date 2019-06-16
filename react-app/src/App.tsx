@@ -92,21 +92,6 @@ export class App extends React.Component<any, AppState> {
   get grid(): Grid {
     return this.props.children as Grid;
   }
-
-  evaluateGrid() {
-    if (!this.grid.tileClearController.markTilesToClear()) {
-      return;
-    }
-    // todo grid.updateView();
-    let that = this;
-    setTimeout(function() {
-      that.grid.tileClearController.clearMarkedTiles();
-      // todo grid.updateView();
-      setTimeout(function() {
-        that.onGridChanged();
-      }, 100);
-    }, 500);
-  }
 }
 
 export default App;
