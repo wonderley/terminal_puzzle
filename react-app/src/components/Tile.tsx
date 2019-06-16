@@ -3,10 +3,16 @@ import './Tile.css';
 import Grid from './Grid';
 
 export interface TileProps {
-  x: number;
-  y: number;
+  initialX: number;
+  initialY: number;
   height: number;
   width: number;
+  onComponentDidMount: (tile: Tile) => void;
+}
+
+export interface TileState {
+  x: number;
+  y: number;
   subrow: number;
   cursor: boolean;
   markedToClear: boolean;
@@ -17,14 +23,24 @@ export const TILE_TYPE_EMPTY: string = 'empty';
 export type TileType = 'empty' | 'a' | 'b' | 'c' | 'd';
 
 export class Tile
-       extends React.Component<TileProps> {
+       extends React.Component<TileProps, TileState> {
 
   static readonly NONEMPTY_TILE_STATE_COUNT = 4;
   static readonly INNER_TILE_OFFSET = 8;
   static readonly NONEMPTY_TYPES: TileType[] = ['a', 'b', 'c', 'd'];
   static readonly TILE_BORDER_WIDTH = 2;
 
-  markedToClear: boolean = false;
+  constructor(props: TileProps, state: TileState) {
+    super(props);
+    this.state = {
+      x: props.initialX,
+      y: props.initialY,
+      subrow: 0,
+      cursor: false,
+      markedToClear: false,
+      tileType: 'empty',
+    };
+  }
 
   render() {
     return (
@@ -46,15 +62,22 @@ export class Tile
     );
   }
 
+  componentDidMount() {
+    this.props.onComponentDidMount(this);
+  }
+
   private _classForTileProps(): string {
-    return `${this.props.tileType} ${this.props.cursor ? 'cursor' : ''}`;
+    return `${this.state.tileType} ${this.state.cursor ? 'cursor' : ''}`;
   }
 
   private _top(): number {
+    const fullHeight = this._fullHeight();
     // Add 1 to push hidden row below the grid
-    return  this._fullHeight() * (this.props.y + 1)
-    // Subtract subrow
-              - this._fullHeight() / Grid.SUBROWS_PER_ROW * this.props.subrow;
+    return fullHeight * (this.state.y + 1)
+      // Subtract subrow
+      - fullHeight / Grid.SUBROWS_PER_ROW * this.state.subrow
+      // Up a bit more
+      - fullHeight / Grid.SUBROWS_PER_ROW;
   }
 
   private _fullHeight(): number {
@@ -62,6 +85,6 @@ export class Tile
   }
   
   private _left(): number {
-    return this._fullHeight() * this.props.x;
+    return this._fullHeight() * this.state.x;
   }
 }

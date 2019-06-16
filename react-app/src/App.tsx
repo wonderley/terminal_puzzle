@@ -12,15 +12,18 @@ interface AppDimensions {
 }
 
 export class App extends React.Component<any, AppState> {
+
   static GAME_ADVANCE_INTERVAL_MILLIS = 3000;
   // todo advanceGameIntervalId: NodeJS.Timeout | undefined;
   private _container: HTMLDivElement | null = null;
+
   constructor(props: any) {
     super(props);
     this.state = {
       dimensions: null,
     };
   }
+
   render() {
     const { dimensions } = this.state;
     return (
@@ -30,6 +33,7 @@ export class App extends React.Component<any, AppState> {
       </div>
     );
   }
+
   renderContent(dimensions: AppDimensions): JSX.Element {
     // Give dimensions to grid component that can be divided evenly
     // so that there's no pixel fraction issues.
@@ -43,9 +47,10 @@ export class App extends React.Component<any, AppState> {
     const tileWidth = tileHeight;
     const gridWidth = Grid.COLUMN_COUNT * tileWidth;
     return <Grid height={gridHeight}
-                          width={gridWidth}
-                          onComponentDidMount={this.gridComponentDidMount.bind(this)}/>;
+                 width={gridWidth}
+                 onGridReady={this.gridReady.bind(this)} />;
   }
+
   componentDidMount() {
     // Measure container
     const style: CSSStyleDeclaration = window.getComputedStyle(this._container!);
@@ -61,9 +66,10 @@ export class App extends React.Component<any, AppState> {
       dimensions: { height, width },
     });
   }
-  gridComponentDidMount(gridComponent: Grid) {
-    gridComponent.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
-    gridComponent.randomizeFirstRow();
+
+  gridReady(grid: Grid) {
+    grid.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
+    grid.randomizeFirstRow();
     // todo this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
   }
 

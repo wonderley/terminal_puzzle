@@ -65,6 +65,5 @@ export class Cursor {
   }
   swapTiles() {
     this._grid.swapTilesAt(this._x, this._y, this._x + 1, this._y);
-    // todo GameController.instance.onGridChanged();
   }
 }

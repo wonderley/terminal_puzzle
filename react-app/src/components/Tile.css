@@ -26,10 +26,34 @@
 }
 
 .tile.cursor {
-  background-color: gray;
+  background-color: white;
 }
 
 .inner-tile {
-  background-color: white;
+  position: absolute;
+}
+
+.tile.a > .inner-tile {
+  background-color: red;
+  position: absolute;
+}
+
+.tile.b > .inner-tile {
+  background-color: blue;
+  position: absolute;
+}
+
+.tile.c > .inner-tile {
+  background-color: green;
+  position: absolute;
+}
+
+.tile.d > .inner-tile {
+  background-color: yellow;
+  position: absolute;
+}
+
+.tile.empty > .inner-tile {
+  background-color: #282c34;
   position: absolute;
 }
