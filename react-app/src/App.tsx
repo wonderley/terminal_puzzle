@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Grid } from './components/Grid';
+import { Loop } from './terminal/loop';
 
 interface AppState {
   dimensions: AppDimensions | null;
@@ -14,8 +15,10 @@ interface AppDimensions {
 export class App extends React.Component<any, AppState> {
 
   static GAME_ADVANCE_INTERVAL_MILLIS = 3000;
-  // todo advanceGameIntervalId: NodeJS.Timeout | undefined;
   private _container: HTMLDivElement | null = null;
+  private _grid: Grid | null = null;
+  private _loop: Loop = new Loop(this);
+  private _nextGameAdvance = new Date().getTime();
 
   constructor(props: any) {
     super(props);
@@ -68,9 +71,10 @@ export class App extends React.Component<any, AppState> {
   }
 
   gridReady(grid: Grid) {
+    this._grid = grid;
     grid.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
     grid.randomizeFirstRow();
-    // todo this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), this.gameAdvanceIntervalInMillis);
+    this._loop.start();
   }
 
   // From GameController
@@ -85,12 +89,14 @@ export class App extends React.Component<any, AppState> {
   }
 
   onGameOver() {
-    // todo clearInterval(this.advanceGameIntervalId);
-    // this.advanceGameIntervalId = setInterval(this.advanceGame.bind(this), App.GAME_ADVANCE_INTERVAL_MILLIS);
+    this._loop.stop();
   }
 
-  get grid(): Grid {
-    return this.props.children as Grid;
+  onTick(time: number) {
+    if (time > this._nextGameAdvance) {
+      this._grid!.advanceGame();
+      this._nextGameAdvance = time + App.GAME_ADVANCE_INTERVAL_MILLIS;
+    }
   }
 }
 
