@@ -7,6 +7,7 @@ import { Grid } from '../components/Grid';
 export class GravityController {
   constructor(private readonly _grid: Grid) {
   }
+
   dropTileAt(x: number, y: number) {
     for (let currentY = y; currentY < Grid.ROW_COUNT - 1; ++currentY) {
       let tileBelow = this._grid.tileAt(x, currentY + 1);
@@ -15,7 +16,8 @@ export class GravityController {
       }
       this._grid.swapTilesAt(x, currentY, x, currentY + 1);
     }
-  };
+  }
+
   /**
    * For now, just apply all gravity at once without animation or anything.
    */
@@ -28,5 +30,6 @@ export class GravityController {
         }
       }
     }
-  };
+    this._grid.evaluate();
+  }
 }

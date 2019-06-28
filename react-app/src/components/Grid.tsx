@@ -84,7 +84,13 @@ export class Grid
       if (this.cursor.getY() > 0) {
         this.cursor.setPosition(this.cursor.getX(), this.cursor.getY() - 1);
       }
+      // The new row on the bottom may cause a vertical match.
+      this.evaluate();
     }
+    // Force update because the rows are currently not
+    // part of state. Even if they were, a forced call like
+    // this.setState({ rows: this.rows }); would need
+    // to go here.
     this.forceUpdate();
   }
 
@@ -141,6 +147,7 @@ export class Grid
     }
     return column;
   }
+
   swapTilesAt(x1: number, y1: number, x2: number, y2: number) {
     const tile1 = this.tileAt(x1, y1);
     const tile2 = this.tileAt(x2, y2);
@@ -149,6 +156,7 @@ export class Grid
     tile1.setState({ tileType: state2.tileType });
     tile2.setState({ tileType: state1.tileType });
   }
+
   advanceRowsSmall() {
     this.currentSubrow = (this.currentSubrow + 1) % Grid.SUBROWS_PER_ROW;
     const subrow = this.currentSubrow;
@@ -158,6 +166,7 @@ export class Grid
       this.advanceRows();
     }
   }
+
   /**
    * Bring the rows upwards by one and add a new row
    * of occupied tiles to the bottom.
@@ -188,20 +197,20 @@ export class Grid
     return allowedTypes[tileIndex];
   }
 
-
   evaluate() {
+    let that = this;
     if (!this.tileClearController.markTilesToClear()) {
+      setTimeout(function() {
+        that.gravityController.applyGravity();
+      }, 100);
       return;
     }
-    // todo grid.updateView();
-    // let that = this;
-    // setTimeout(function() {
-    //   that.grid.tileClearController.clearMarkedTiles();
-    //   // todo grid.updateView();
-    //   setTimeout(function() {
-    //     that.onGridChanged();
-    //   }, 100);
-    // }, 500);
+    setTimeout(function() {
+      that.tileClearController.clearMarkedTiles();
+      setTimeout(function() {
+        that.gravityController.applyGravity();
+      }, 100);
+    }, 500);
   }
 }
 

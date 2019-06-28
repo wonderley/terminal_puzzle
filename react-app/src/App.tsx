@@ -77,17 +77,6 @@ export class App extends React.Component<any, AppState> {
     this._loop.start();
   }
 
-  // From GameController
-  onGridChanged() {
-    // todo this.view.updateView();
-    // let that: App = this;
-    // setTimeout(function() {
-    //   that.props.children[0].gravityController.applyGravity();
-    //   // todo that.view.updateView();
-    //   that.evaluateGrid();
-    // }, 200);
-  }
-
   onGameOver() {
     this._loop.stop();
   }
