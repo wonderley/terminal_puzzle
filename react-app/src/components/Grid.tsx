@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Grid.css';
-import { Tile, TileType, TILE_TYPE_EMPTY } from './Tile';
+import { Tile, TileProps, TileType, TILE_TYPE_EMPTY } from './Tile';
 import { Cursor } from '../terminal/cursor';
 import { InputController } from '../terminal/input_controller';
 import { GravityController } from '../terminal/gravity_controller';
@@ -12,8 +12,12 @@ export interface GridProps {
   onGridReady: (gridComponent: Grid) => void,
 }
 
+interface GridState {
+  rows: TileProps[][];
+}
+
 export class Grid
-       extends React.Component<GridProps> {
+       extends React.Component<GridProps, GridState> {
 
   public static readonly ROW_COUNT: number = 12;
   public static readonly COLUMN_COUNT: number = 6;
@@ -23,16 +27,27 @@ export class Grid
   tileClearController = new TileClearController(this);
   cursor: Cursor = new Cursor(this, this);
   inputController = new InputController(this, this.cursor);  currentSubrow: number = 0;
-  rows: Tile[][] = [];
-
-  private _tilesMounted = 0;
 
   constructor(props: GridProps) {
     super(props);
+    this.state = {
+      rows: [],
+    };
+    debugger;
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
-      // Prepopulate the rows so tiles can be
-      // inserted out of order in tileDidMount
-      this.rows.push(Array(10));
+      const row: TileProps[] = [];
+      for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
+        row.push({
+          x,
+          y,
+          subrow: 0,
+          cursor: false,
+          tileType: 'empty',
+          height: 0,
+          width: 0,
+        });
+      }
+      this.state.rows.push(row);
     }
   }
 
@@ -40,40 +55,34 @@ export class Grid
     const tileHeight = this.props.height / Grid.ROW_COUNT;
     const tileWidth = this.props.width / Grid.COLUMN_COUNT;
     const tiles: JSX.Element[] = [];
-    for (let y = 0; y < Grid.ROW_COUNT; ++y) {
-      for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
-        tiles.push(<Tile
-                    key={`${x},${y}`} initialX={x} initialY={y}
-                    height={tileHeight} width={tileWidth}
-                    onComponentDidMount={this.tileDidMount.bind(this)} />);
-      }
-    }
+    this.state.rows.forEach((row, y) => row.forEach((tileProps, x) => {
+      tiles.push(<Tile
+        key={`${x},${y}`} x={tileProps.x} y={tileProps.y}
+        height={tileHeight} width={tileWidth} subrow={tileProps.subrow}
+        cursor={tileProps.cursor} tileType={tileProps.tileType} />);
+    }));
     return (
-      <div className="grid"
-           style={{
-            height: this.props.height,
-            width: this.props.width,
-           }} >
+      <div className="grid" style={{
+          height: this.props.height,
+          width: this.props.width,
+      }} >
         {tiles}
       </div>
     );
   }
 
-  tileDidMount(tile: Tile) {
-    this.rows[tile.state.y][tile.state.x] = tile;
-    this._tilesMounted++;
-    if (this._tilesMounted === Grid.ROW_COUNT * Grid.COLUMN_COUNT)
-      this.props.onGridReady(this);
+  componentDidMount() {
+    this.props.onGridReady(this);
   }
 
   drawCursorAt(x: number, y: number) {
-    this.tileAt(x, y).setState({ cursor: true });
-    this.tileAt(x+1, y).setState({ cursor: true });
+    this.updateTile(this.tileAt(x, y), { cursor: true });
+    this.updateTile(this.tileAt(x+1, y), { cursor: true });
   }
 
   clearCursorAt(x: number, y: number) {
-    this.tileAt(x, y).setState({ cursor: false });
-    this.tileAt(x+1, y).setState({ cursor: false });
+    this.updateTile(this.tileAt(x, y), { cursor: false });
+    this.updateTile(this.tileAt(x+1, y), { cursor: false });
   }
 
   advanceGame() {
@@ -87,15 +96,10 @@ export class Grid
       // The new row on the bottom may cause a vertical match.
       this.evaluate();
     }
-    // Force update because the rows are currently not
-    // part of state. Even if they were, a forced call like
-    // this.setState({ rows: this.rows }); would need
-    // to go here.
-    this.forceUpdate();
   }
 
   public randomizeFirstRow() {
-    const rows = this.rows;
+    const rows = this.state.rows;
     const row = rows[rows.length - 1];
     const tileTypeCounter = {
       type: TILE_TYPE_EMPTY,
@@ -116,28 +120,34 @@ export class Grid
         tileTypeCounter.type = tileType;
         tileTypeCounter.count = 1;
       }
-      row[j].setState({
+      this.updateTile(row[j], {
         cursor: false,
         tileType,
       });
     }
   }
 
-  tileAt(x: number, y: number): Tile {
+  updateTile(tileProps: TileProps, updates: Partial<TileProps>) {
+    Object.assign(tileProps, updates);
+    const rowsCopy = [...this.state.rows];
+    this.setState({ rows: rowsCopy });
+  }
+
+  tileAt(x: number, y: number): TileProps {
     if (x >= Grid.COLUMN_COUNT ||
         y >= Grid.ROW_COUNT ||
         x < 0 ||
         y < 0) {
       throw new Error('out of bounds');
     }
-    return this.rows[y][x];
+    return this.state.rows[y][x];
   }
 
   rowAt(y: number) {
     if (y >= Grid.ROW_COUNT || y < 0) {
       throw new Error('out of bounds');
     }
-    return this.rows[y];
+    return this.state.rows[y];
   }
 
   columnAt(x: number) {
@@ -149,19 +159,20 @@ export class Grid
   }
 
   swapTilesAt(x1: number, y1: number, x2: number, y2: number) {
-    const tile1 = this.tileAt(x1, y1);
-    const tile2 = this.tileAt(x2, y2);
-    const state1 = tile1.state;
-    const state2 = tile2.state;
-    tile1.setState({ tileType: state2.tileType });
-    tile2.setState({ tileType: state1.tileType });
+    const tile1Props = this.tileAt(x1, y1);
+    const tile2Props = this.tileAt(x2, y2);
+    const tile1PropsCopy = Object.assign({}, tile1Props);
+    this.updateTile(tile1Props, tile2Props);
+    this.updateTile(tile2Props, tile1PropsCopy);
   }
 
   advanceRowsSmall() {
+    const that = this;
     this.currentSubrow = (this.currentSubrow + 1) % Grid.SUBROWS_PER_ROW;
     const subrow = this.currentSubrow;
-    this.rows.forEach(row => 
-         row.forEach(tile => tile.setState({ subrow })));
+    this.state.rows.forEach(row => row.forEach(tile => {
+      that.updateTile(tile, { subrow });
+    }));
     if (subrow === 0) {
       this.advanceRows();
     }
@@ -172,19 +183,20 @@ export class Grid
    * of occupied tiles to the bottom.
    */
   advanceRows() {
-    const rows = this.rows;
-    rows.forEach(row => row.forEach(tile =>
-      tile.setState({ y: tile.state.y - 1 }
-    )));
+    const that = this;
+    const rows = this.state.rows;
+    rows.forEach(row => row.forEach(tile => {
+      that.updateTile(tile, { y: tile.y - 1 });
+    }));
     const topRow = rows[0];
     const topRowTilesEmpty = topRow.every(tile =>
-      tile.state.tileType === TILE_TYPE_EMPTY);
+      tile.tileType === TILE_TYPE_EMPTY);
     if (topRowTilesEmpty) {
       // Top row is empty. It can be used as the new bottom row.
       rows.shift();
       rows.push(topRow);
       topRow.forEach(tile =>
-        tile.setState({ y: rows.length - 1 }));
+        that.updateTile(tile, { y: rows.length - 1 }));
       this.randomizeFirstRow();
     } else {
       // todo this._gridComponent.onGameOver();

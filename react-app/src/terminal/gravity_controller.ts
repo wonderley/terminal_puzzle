@@ -11,7 +11,7 @@ export class GravityController {
   dropTileAt(x: number, y: number) {
     for (let currentY = y; currentY < Grid.ROW_COUNT - 1; ++currentY) {
       let tileBelow = this._grid.tileAt(x, currentY + 1);
-      if (tileBelow.state.tileType !== TILE_TYPE_EMPTY) {
+      if (tileBelow.tileType !== TILE_TYPE_EMPTY) {
         break;
       }
       this._grid.swapTilesAt(x, currentY, x, currentY + 1);
@@ -25,7 +25,7 @@ export class GravityController {
     // Start from the second row.
     for (let y = Grid.ROW_COUNT - 2; y >= 0; --y) {
       for (let x = 0; x < Grid.COLUMN_COUNT; ++x) {
-        if (this._grid.tileAt(x, y).state.tileType !== TILE_TYPE_EMPTY) {
+        if (this._grid.tileAt(x, y).tileType !== TILE_TYPE_EMPTY) {
           this.dropTileAt(x, y);
         }
       }

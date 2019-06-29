@@ -1,5 +1,5 @@
 import { Grid } from '../components/Grid';
-import { Tile, TILE_TYPE_EMPTY, TILE_TYPE_MARKED } from '../components/Tile';
+import { TileProps, TILE_TYPE_EMPTY, TILE_TYPE_MARKED } from '../components/Tile';
 
 /**
  * Searches the grid for tiles that should be cleared.
@@ -11,20 +11,18 @@ export class TileClearController {
   // Find any tiles that need to be cleared.
   // Return true if any tiles are marked.
   public markTilesToClear(): boolean {
-    function markTile(tile: Tile) {
-      tile.setState({ tileType: 'marked' });
-    }
+    const that = this;
     let somethingWasMarked = false;
     let currentType = TILE_TYPE_EMPTY;
     let consecutiveTiles: any[] = [];
-    function markConsecutiveTilesInArray(tile: Tile, idx: number, arr: Tile[]) {
-      if (tile.state.tileType !== TILE_TYPE_EMPTY &&
-          tile.state.tileType === currentType) {
+    function markConsecutiveTilesInArray(tile: TileProps, idx: number, arr: TileProps[]) {
+      if (tile.tileType !== TILE_TYPE_EMPTY &&
+          tile.tileType === currentType) {
         consecutiveTiles.push(tile);
       } else {
         if (consecutiveTiles.length >= 3) {
           somethingWasMarked = true;
-          consecutiveTiles.forEach(markTile);
+          consecutiveTiles.forEach(that._markTile);
         }
         consecutiveTiles = [tile];
       }
@@ -32,13 +30,13 @@ export class TileClearController {
         // Handle the last item
         if (consecutiveTiles.length >= 3) {
           somethingWasMarked = true;
-          consecutiveTiles.forEach(markTile);
+          consecutiveTiles.forEach(that._markTile);
         }
         consecutiveTiles = [];
         currentType = TILE_TYPE_EMPTY;
       }
       else {
-        currentType = tile.state.tileType;
+        currentType = tile.tileType;
       }
     }
     // Iterate over each row and each column
@@ -50,11 +48,13 @@ export class TileClearController {
       this._grid.columnAt(x).slice(0, Grid.ROW_COUNT - 1).forEach(markConsecutiveTilesInArray);
     }
     return somethingWasMarked;
-  };
+  }
+
   clearMarkedTiles() {
-    function clearTileIfMarked(tile: Tile) {
-      if (tile.state.tileType === TILE_TYPE_MARKED) {
-        tile.setState({
+    const that = this;
+    function clearTileIfMarked(tile: TileProps) {
+      if (tile.tileType === TILE_TYPE_MARKED) {
+        that._grid.updateTile(tile, {
           tileType: 'empty',
         });
       }
@@ -62,5 +62,9 @@ export class TileClearController {
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
       this._grid.rowAt(y).forEach(clearTileIfMarked);
     }
-  };
+  }
+
+  private _markTile(tile: TileProps) {
+    this._grid.updateTile(tile, { tileType: 'marked' });
+  }
 }
