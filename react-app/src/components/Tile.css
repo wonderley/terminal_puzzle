@@ -66,3 +66,43 @@
   background-color: black;
   position: absolute;
 }
+
+.tile.a.bottom {
+  background-color: darkred;
+  position: absolute;
+}
+
+.tile.a.bottom > .inner-tile {
+  background-color: darkred;
+  position: absolute;
+}
+
+.tile.b.bottom {
+  background-color: darkblue;
+  position: absolute;
+}
+
+.tile.b.bottom > .inner-tile {
+  background-color: darkblue;
+  position: absolute;
+}
+
+.tile.c.bottom {
+  background-color: darkgreen;
+  position: absolute;
+}
+
+.tile.c.bottom > .inner-tile {
+  background-color: darkgreen;
+  position: absolute;
+}
+
+.tile.d.bottom {
+  background-color: orange;
+  position: absolute;
+}
+
+.tile.d.bottom > .inner-tile {
+  background-color: orange;
+  position: absolute;
+}

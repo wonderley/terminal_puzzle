@@ -66,7 +66,9 @@ export class Tile
   }
 
   private _classForTileProps(): string {
-    return `${this.state.tileType} ${this.state.cursor ? 'cursor' : ''}`;
+    const cursor = this.state.cursor ? ' cursor' : '';
+    const bottom = (this.state.y === Grid.ROW_COUNT - 1) ? ' bottom' : '';
+    return `${this.state.tileType}${cursor}${bottom}`;
   }
 
   private _top(): number {
