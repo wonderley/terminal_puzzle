@@ -11,20 +11,30 @@ export class TileClearController {
   // Find any tiles that need to be cleared.
   // Return true if any tiles are marked.
   public markTilesToClear(): boolean {
-    function markTile(tile: Tile) {
-      tile.setState({ tileType: 'marked' });
+    const that = this;
+    function markTiles(tiles: Tile[]) {
+      that._grid.props.addPoints(
+        consecutiveTiles.reduce((total, _, i) => {
+          // Award one point for each of the first three tiles.
+          // For each additional tile, award 2, then 3, then 4...
+          const nextValue = i <= 2 ? 1 : i - 1;
+          return total + nextValue;
+        }, 0)
+      );
+      tiles.forEach(tile => tile.setState({ tileType: 'marked' }));
     }
     let somethingWasMarked = false;
     let currentType = TILE_TYPE_EMPTY;
-    let consecutiveTiles: any[] = [];
+    let consecutiveTiles: Tile[] = [];
     function markConsecutiveTilesInArray(tile: Tile, idx: number, arr: Tile[]) {
       if (tile.state.tileType !== TILE_TYPE_EMPTY &&
+          tile.state.tileType !== TILE_TYPE_MARKED &&
           tile.state.tileType === currentType) {
         consecutiveTiles.push(tile);
       } else {
         if (consecutiveTiles.length >= 3) {
           somethingWasMarked = true;
-          consecutiveTiles.forEach(markTile);
+          markTiles(consecutiveTiles);
         }
         consecutiveTiles = [tile];
       }
@@ -32,7 +42,7 @@ export class TileClearController {
         // Handle the last item
         if (consecutiveTiles.length >= 3) {
           somethingWasMarked = true;
-          consecutiveTiles.forEach(markTile);
+          markTiles(consecutiveTiles);
         }
         consecutiveTiles = [];
         currentType = TILE_TYPE_EMPTY;

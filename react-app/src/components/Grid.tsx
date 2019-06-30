@@ -9,7 +9,8 @@ import { TileClearController } from '../terminal/tile_clear_controller';
 export interface GridProps {
   height: number,
   width: number,
-  onGridReady: (gridComponent: Grid) => void,
+  gridDidMount: (grid: Grid) => void,
+  addPoints: (points: number) => void,
 }
 
 export class Grid
@@ -63,7 +64,7 @@ export class Grid
     this.rows[tile.state.y][tile.state.x] = tile;
     this._tilesMounted++;
     if (this._tilesMounted === Grid.ROW_COUNT * Grid.COLUMN_COUNT)
-      this.props.onGridReady(this);
+      this.props.gridDidMount(this);
   }
 
   drawCursorAt(x: number, y: number) {
@@ -133,14 +134,14 @@ export class Grid
     return this.rows[y][x];
   }
 
-  rowAt(y: number) {
+  rowAt(y: number): Tile[] {
     if (y >= Grid.ROW_COUNT || y < 0) {
       throw new Error('out of bounds');
     }
     return this.rows[y];
   }
 
-  columnAt(x: number) {
+  columnAt(x: number): Tile[] {
     let column = [];
     for (let y = 0; y < Grid.ROW_COUNT; ++y) {
       column.push(this.tileAt(x, y));

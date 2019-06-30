@@ -84,7 +84,7 @@ export class Tile
   private _fullHeight(): number {
     return this.props.height + Tile.TILE_BORDER_WIDTH;
   }
-  
+
   private _left(): number {
     return this._fullHeight() * this.state.x;
   }

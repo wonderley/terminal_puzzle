@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { Grid } from './components/Grid';
 import { Loop } from './terminal/loop';
+import { Score } from './components/Score';
 
 interface AppState {
   dimensions: AppDimensions | null;
@@ -17,6 +18,7 @@ export class App extends React.Component<any, AppState> {
   static GAME_ADVANCE_INTERVAL_MILLIS = 3000;
   private _container: HTMLDivElement | null = null;
   private _grid: Grid | null = null;
+  private _score: Score | null = null;
   private _loop: Loop = new Loop(this);
   private _nextGameAdvance = new Date().getTime();
 
@@ -37,7 +39,7 @@ export class App extends React.Component<any, AppState> {
     );
   }
 
-  renderContent(dimensions: AppDimensions): JSX.Element {
+  renderContent(dimensions: AppDimensions): JSX.Element[] {
     // Give dimensions to grid component that can be divided evenly
     // so that there's no pixel fraction issues.
     const gridBorderWidth = 10;
@@ -49,9 +51,13 @@ export class App extends React.Component<any, AppState> {
     // Tiles are squares
     const tileWidth = tileHeight;
     const gridWidth = Grid.COLUMN_COUNT * tileWidth;
-    return <Grid height={gridHeight}
-                 width={gridWidth}
-                 onGridReady={this.gridReady.bind(this)} />;
+    return [
+      <Grid height={gridHeight}
+            width={gridWidth}
+            gridDidMount={this.gridDidMount.bind(this)}
+            addPoints={this.addPoints.bind(this)} />,
+      <Score scoreDidMount={this.scoreDidMount.bind(this)} />
+    ];
   }
 
   componentDidMount() {
@@ -70,11 +76,19 @@ export class App extends React.Component<any, AppState> {
     });
   }
 
-  gridReady(grid: Grid) {
+  gridDidMount(grid: Grid) {
     this._grid = grid;
     grid.cursor.setPosition(Grid.COLUMN_COUNT / 2, Grid.ROW_COUNT / 2);
     grid.randomizeFirstRow();
     this._loop.start();
+  }
+
+  scoreDidMount(score: Score) {
+    this._score = score;
+  }
+
+  addPoints(points: number) {
+    this._score!.setState( { score: this._score!.state.score + points });
   }
 
   onGameOver() {
